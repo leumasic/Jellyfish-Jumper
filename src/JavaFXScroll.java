@@ -24,7 +24,7 @@ public class JavaFXScroll extends Application {
         Scene scene = new Scene(root);
         Canvas canvas = new Canvas(w, h);
         root.getChildren().add(canvas);
-
+        
         /* 
          NOTEZ : Il s'agit un petit exemple pour démontrer
          l'idée derrière le "scroll" de la fenêtre, ce programme
@@ -47,6 +47,20 @@ public class JavaFXScroll extends Application {
                     break;
                 case DOWN:
                     jeu.bas();
+            }
+
+            switch (e.getCode()) {
+                case LEFT:
+                    System.out.println("you moving left man!");
+                    break;
+                case RIGHT:
+                    System.out.println("you moving left man!");
+                    break;
+                case UP:
+                    System.out.println("you moving left man!");
+                    break;
+                case DOWN:
+                    System.out.println("you moving left man!");
             }
         });
 
@@ -74,7 +88,7 @@ public class JavaFXScroll extends Application {
 
         timer.start();
 
-        primaryStage.setTitle("Scroll");
+        primaryStage.setTitle("Testing");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

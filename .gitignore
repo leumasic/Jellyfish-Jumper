@@ -4,3 +4,5 @@
 # Directory with packages
 /lib
 
+# Ignore vs code workspace
+work.code-workspace
