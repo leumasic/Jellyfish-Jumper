@@ -1,13 +1,13 @@
 package components;
 
-public class Medusa {
+public class Jellyfish {
 
     private double width, height;
     private double xPosition, yPosition;
 
     private Boolean isUgly;
 
-    public Medusa() {
+    public Jellyfish() {
         
         // Width and height of the medusa are defaulted to 50px by 50px
         this.width = 50;

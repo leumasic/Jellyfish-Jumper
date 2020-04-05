@@ -2,6 +2,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -31,7 +32,9 @@ public class View extends Application {
         Scene scene = new Scene(root);
         Canvas canvas = new Canvas(width, height);
         root.getChildren().add(canvas);
-
+        
+        Image image = new Image("/img/medusa.png");
+        
         scene.setOnKeyPressed((e) -> {
             switch (e.getCode()) {
                 case LEFT:
@@ -56,7 +59,7 @@ public class View extends Application {
     }
 
     public void updateWindowPosition() {
-        
+
     }
 
 }

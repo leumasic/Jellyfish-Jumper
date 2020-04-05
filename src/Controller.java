@@ -11,7 +11,7 @@ public class Controller {
     // Models 
     // private Model gorgeousModel;
     private Window window;
-    private Medusa medusa;
+    private Jellyfish jellyfish;
     private ArrayList<Platform> platforms;
     private ArrayList<Bubble> bubbles;
     private AnimationTimer timer;
@@ -20,9 +20,6 @@ public class Controller {
     public Controller(View view) {
         // Set view to modify
         this.view = view;
-
-        // Initialize gorgeous models
-        this.medusa = new Medusa();
 
         // Set whether or not the game has started
         this.gameStarted = false;
@@ -53,7 +50,7 @@ public class Controller {
                 window.updatePosition(timeDelta);
 
                 view.updateWindowPosition();
-                
+
                 lastTime = now;
             }
         };
