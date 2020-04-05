@@ -11,7 +11,7 @@ public class Window {
         // Initial speed defaults to 50px/s
         this.ySpeed = 50;
     }
-    public void updateWindowPosition(double timeDelta) {
+    public void updatePosition(double timeDelta) {
         yPosition += ySpeed * timeDelta + Math.pow(timeDelta, 2);
     }
     public void updateSpeed(double timeDelta) {

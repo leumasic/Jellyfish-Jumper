@@ -6,3 +6,6 @@
 
 # Ignore vs code workspace
 work.code-workspace
+
+# Ignore outputted code
+/bin

@@ -43,6 +43,8 @@ public class View extends Application {
                 case RIGHT:
                     controller.handleKeyRight();
                     break;
+                case T:
+                    controller.stopGame();
             }
         });
 
@@ -52,4 +54,9 @@ public class View extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
+    public void updateWindowPosition() {
+        
+    }
+
 }
