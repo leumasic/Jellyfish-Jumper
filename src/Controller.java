@@ -8,8 +8,6 @@ public class Controller {
     // Allows the controller to modify the view internally
     private View view;
 
-    // Models 
-    // private Model gorgeousModel;
     private Window window;
     private Jellyfish jellyfish;
     private ArrayList<Platform> platforms;
@@ -30,7 +28,7 @@ public class Controller {
         gameStarted = true;
 
         // Start to move the screen down; use AnimationTimer
-        moveWindow();
+        // moveWindow();
     }
 
     private void moveWindow() {
