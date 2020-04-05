@@ -12,7 +12,7 @@ public class JavaFXScroll extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        launch(args);;
+        launch(args);
     }
 
     @Override
@@ -48,20 +48,6 @@ public class JavaFXScroll extends Application {
                 case DOWN:
                     jeu.bas();
             }
-
-            switch (e.getCode()) {
-                case LEFT:
-                    System.out.println("you moving left man!");
-                    break;
-                case RIGHT:
-                    System.out.println("you moving left man!");
-                    break;
-                case UP:
-                    System.out.println("you moving left man!");
-                    break;
-                case DOWN:
-                    System.out.println("you moving left man!");
-            }
         });
 
         GraphicsContext context = canvas.getGraphicsContext2D();
@@ -83,6 +69,7 @@ public class JavaFXScroll extends Application {
                 jeu.draw(context);
 
                 lastTime = now;
+
             }
         };
 

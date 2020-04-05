@@ -20,7 +20,7 @@ public class Jeu {
         rectangles = new ArrayList<>();
 
         // Crée 10 rectangles à des positions aléatoires dans les dimensions du niveau
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
             rectangles.add(new Rectangle(Math.random() * width, Math.random() * height));
         }
     }

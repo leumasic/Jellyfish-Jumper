@@ -7,6 +7,15 @@ public class Medusa {
 
     private Boolean isUgly;
 
+    public Medusa() {
+        
+        // Width and height of the medusa are defaulted to 50px by 50px
+        this.width = 50;
+        this.height = 50;
+
+        
+    }
+
     public void jump() {
 
     }

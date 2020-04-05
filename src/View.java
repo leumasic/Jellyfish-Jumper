@@ -1,7 +1,15 @@
-import javafx.application.Application;;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class View extends Application {
+
+    private static double width = 300;
+    private static double height = 300;
+
     // Graphical Elements
 
     // Application Controller
@@ -16,6 +24,32 @@ public class View extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        System.out.println("Hello world");
+
+        controller = new Controller(this);
+
+        Pane root = new Pane();
+        Scene scene = new Scene(root);
+        Canvas canvas = new Canvas(width, height);
+        root.getChildren().add(canvas);
+
+        scene.setOnKeyPressed((e) -> {
+            switch (e.getCode()) {
+                case LEFT:
+                    controller.handleKeyLeft();
+                    break;
+                case UP:
+                    controller.handleKeyUp();
+                    break;
+                case RIGHT:
+                    controller.handleKeyRight();
+                    break;
+            }
+        });
+
+        GraphicsContext context = canvas.getGraphicsContext2D();
+
+        primaryStage.setTitle("HighSeaTower");
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 }
