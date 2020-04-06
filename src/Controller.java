@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-
-import components.*;
 import components.Jellyfish.Orientation;
 import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
@@ -15,6 +12,8 @@ public class Controller {
 
     private AnimationTimer windowTimer;
     private Game game;
+    private boolean inDebugMode;
+    private boolean isWindowAnimating;
 
     public Controller(View view) {
         // Set view to modify
@@ -53,12 +52,10 @@ public class Controller {
     }
 
     public void startGame() {
+        inDebugMode = false;
 
         // Start animating the jellyfish
         animateJellyfish();
-        moveWindow();
-        // Start to move the screen down; use AnimationTimer
-        // moveWindow();
     }
 
     private void animateJellyfish() {
@@ -77,7 +74,13 @@ public class Controller {
 
                 // Update the game
                 double deltaTimeSinceLast = (now - lastTime) * 1e-9;
-                game.update(deltaTimeSinceLast);
+                // game.updateJellyfish(deltaTimeSinceLast);
+                game.updateGame(deltaTimeSinceLast);
+
+                if (game.isGameOver()) {
+                    game.restartGame();
+                    stopAnimatingWindow();
+                }
 
                 // Update the jellyfish's frame (orientation)
                 double deltaTimeSinceStart = (now - startTime);
@@ -94,7 +97,7 @@ public class Controller {
                 // Draw jellyfish
                 view.drawImage(img, game.jellyfish.getX() - game.window.getX(),
                         game.jellyfish.getY() - game.window.getY());
-
+                
                 // Set last time to current time
                 lastTime = now;
             }
@@ -102,7 +105,7 @@ public class Controller {
         timer.start();
     }
 
-    private void moveWindow() {
+    private void animateWindow() {
         windowTimer = new AnimationTimer() {
             private long lastTime = 0;
 
@@ -114,7 +117,6 @@ public class Controller {
                 }
 
                 double timeDelta = (now - lastTime) * 1e-9;
-
                 game.updateWindow(timeDelta);
 
                 lastTime = now;
@@ -124,21 +126,25 @@ public class Controller {
         windowTimer.start();
     }
 
-    private void stopWindow() {
+    private void stopAnimatingWindow() {
         windowTimer.stop();
     }
 
     public void resumeGame() {
-        moveWindow();
+        animateWindow();
     }
 
     public void stopGame() {
-        stopWindow();
+        stopAnimatingWindow();
     }
 
     public void handleKeyLeft() {
-        if (game.isPlaying())
+        if (game.isGameOver())
             startGame();
+
+        if (!inDebugMode && !isWindowAnimating) {
+            animateWindow();
+        }
 
         if (game.jellyfish.getOrientation() != Orientation.LEFT)
             game.jellyfish.setOrientation(Orientation.LEFT);
@@ -147,8 +153,12 @@ public class Controller {
     }
 
     public void handleKeyRight() {
-        if (game.isPlaying())
+        if (game.isGameOver())
             startGame();
+
+        if (!inDebugMode && !isWindowAnimating) {
+            animateWindow();
+        }
 
         if (game.jellyfish.getOrientation() != Orientation.RIGHT)
             game.jellyfish.setOrientation(Orientation.RIGHT);
@@ -157,13 +167,24 @@ public class Controller {
     }
 
     public void handleKeyUp() {
+        if (game.isGameOver())
+            startGame();
+
+        if (!inDebugMode && !isWindowAnimating) {
+            animateWindow();
+        }
+
         game.jellyfish.jump();
     }
 
-    public void enterDebugMode() {
-        stopWindow();
-
-
+    public void toggleDebugMode() {
+        inDebugMode = !inDebugMode;
+        
+        if (inDebugMode) {
+            stopAnimatingWindow();
+        } else {
+            animateWindow();
+        }
     }
 
     public void stopJellyfish() {

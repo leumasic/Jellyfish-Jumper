@@ -52,7 +52,7 @@ public class View extends Application {
         rectanglesContext = rectanglesCanvas.getGraphicsContext2D();
 
         controller.startGame();
-
+        
         scene.setOnKeyPressed((e) -> {
             switch (e.getCode()) {
                 case LEFT:
@@ -65,27 +65,26 @@ public class View extends Application {
                     controller.handleKeyRight();
                     break;
                 case T:
-                    controller.enterDebugMode();
+                    controller.toggleDebugMode();
                     break;
                 case ESCAPE:
                     Platform.exit();
                     break;
             }
         });
-
+        
         scene.setOnKeyReleased((e) -> {
             if (e.getCode() == KeyCode.LEFT || e.getCode() == KeyCode.RIGHT) {
                 controller.stopJellyfish();
             }
         });
-
+        
         primaryStage.setTitle("High Sea Tower");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
     public void drawImage(Image img, double xPosition, double yPosition) {
-        // context.clearRect(xPosition, yPosition, img.getWidth(), img.getHeight());
-        imageContext.clearRect(0, 0, WIDTH, HEIGHT);
+        imageContext.clearRect(xPosition - 10, yPosition - 10, WIDTH, HEIGHT);
         imageContext.drawImage(img, xPosition, yPosition);
     }
     public void drawRectangle(double xPosition, double yPosition, double width, double height, Color color) {

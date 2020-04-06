@@ -58,24 +58,11 @@ public abstract class Entity {
         return ySpeed;
     }
 
-    // public void update(double timeDelta) {
-    // xSpeed += timeDelta * xAcceleration;
-    // ySpeed += timeDelta * yAcceleration;
+    public void setX(double xPosition) {
+        this.xPosition = xPosition;
+    }
 
-    // xPosition += xSpeed * timeDelta;
-    // ySpeed += ySpeed * timeDelta;
-
-    // if (xPosition + getWidth() / 2 > 300 || xPosition - getWidth() / 2 < 0) {
-    // xSpeed *= -0.9;
-    // }
-
-    // if (yPosition + getHeight() / 2 > 300 || yPosition - getHeight() / 2 < 0) {
-    // ySpeed *= -0.9;
-    // }
-
-    // xPosition = Math.min(xPosition, 300 - getWidth() / 2);
-    // xPosition = Math.max(xPosition, getWidth() / 2);
-    // yPosition = Math.min(yPosition, 300 - getHeight() / 2);
-    // yPosition = Math.max(yPosition, getHeight() / 2);
-    // }
+    public void setY(double yPosition) {
+        this.yPosition = yPosition;
+    }
 }
