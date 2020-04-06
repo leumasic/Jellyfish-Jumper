@@ -5,35 +5,77 @@ public abstract class Entity {
     protected double xSpeed, ySpeed;
     protected double xAcceleration, yAcceleration;
 
-    public Entity(double xPosition, double yPosition) {
+    public Entity(double xPosition, double yPosition, double xSpeed, double ySpeed, double xAcceleration,
+            double yAcceleration) {
+
         this.xPosition = xPosition;
         this.yPosition = yPosition;
+
+        this.xSpeed = xSpeed;
+        this.ySpeed = ySpeed;
+
+        this.xAcceleration = xAcceleration;
+        this.yAcceleration = yAcceleration;
     }
 
-    public double getX() {return xPosition;}
-    public double getY() {return yPosition;}
+    public double getX() {
+        return xPosition;
+    }
 
-    public abstract double getWidth();
-    public abstract double getHeight();
+    public double getY() {
+        return yPosition;
+    }
+
+    public double getHorizontalAcceleration() {
+        return xAcceleration;
+    }
+
+    public void setHorizontalAcceleration(double xAcceleration) {
+        this.xAcceleration = xAcceleration;
+    }
+
+    public double getVerticalAcceleration() {
+        return yAcceleration;
+    }
+
+    public void setVerticalAcceleration(double yAcceleration) {
+        this.yAcceleration = yAcceleration;
+    }
+
+    public void setHorizontalVelocity(double xSpeed) {
+        this.xSpeed = xSpeed;
+    }
+
+    public void setVerticalVelocity(double ySpeed) {
+        this.ySpeed = ySpeed;
+    }
+
+    public double getHorizontalVelocity() {
+        return xSpeed;
+    }
+
+    public double getVerticalVelocity() {
+        return ySpeed;
+    }
 
     // public void update(double timeDelta) {
-    //     xSpeed += timeDelta * xAcceleration;
-    //     ySpeed += timeDelta * yAcceleration;
+    // xSpeed += timeDelta * xAcceleration;
+    // ySpeed += timeDelta * yAcceleration;
 
-    //     xPosition += xSpeed * timeDelta;
-    //     ySpeed += ySpeed * timeDelta;
+    // xPosition += xSpeed * timeDelta;
+    // ySpeed += ySpeed * timeDelta;
 
-    //     if (xPosition + getWidth() / 2 > 300 || xPosition - getWidth() / 2 < 0) {
-    //         xSpeed *= -0.9;
-    //     }
+    // if (xPosition + getWidth() / 2 > 300 || xPosition - getWidth() / 2 < 0) {
+    // xSpeed *= -0.9;
+    // }
 
-    //     if (yPosition + getHeight() / 2 > 300 || yPosition - getHeight() / 2 < 0) {
-    //         ySpeed *= -0.9;
-    //     }
+    // if (yPosition + getHeight() / 2 > 300 || yPosition - getHeight() / 2 < 0) {
+    // ySpeed *= -0.9;
+    // }
 
-    //     xPosition = Math.min(xPosition, 300 - getWidth() / 2);
-    //     xPosition = Math.max(xPosition, getWidth() / 2);
-    //     yPosition = Math.min(yPosition, 300 - getHeight() / 2);
-    //     yPosition = Math.max(yPosition, getHeight() / 2);
+    // xPosition = Math.min(xPosition, 300 - getWidth() / 2);
+    // xPosition = Math.max(xPosition, getWidth() / 2);
+    // yPosition = Math.min(yPosition, 300 - getHeight() / 2);
+    // yPosition = Math.max(yPosition, getHeight() / 2);
     // }
 }

@@ -4,7 +4,9 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class View extends Application {
@@ -32,6 +34,14 @@ public class View extends Application {
 
         Pane root = new Pane();
         Scene scene = new Scene(root);
+
+        Canvas background = new Canvas(WIDTH, HEIGHT);
+        root.getChildren().add(background);
+
+        GraphicsContext backgroundContext = background.getGraphicsContext2D();
+        backgroundContext.setFill(Color.rgb(10, 24, 173));
+        backgroundContext.fillRect(0, 0, 350, 480);
+
         Canvas canvas = new Canvas(WIDTH, HEIGHT);
         root.getChildren().add(canvas);
         context = canvas.getGraphicsContext2D();
@@ -57,19 +67,23 @@ public class View extends Application {
             }
         });
 
+        scene.setOnKeyReleased((e) -> {
+            if (e.getCode() == KeyCode.LEFT || e.getCode() == KeyCode.RIGHT) {
+                controller.stopJellyfish();
+            }
+        });
+
         primaryStage.setTitle("High Sea Tower");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-
-    public void updateWindowPosition() {
-
-    }
-
     public void drawImage(Image img, double xPosition, double yPosition) {
         // context.clearRect(xPosition, yPosition, img.getWidth(), img.getHeight());
         context.clearRect(0, 0, WIDTH, HEIGHT);
         context.drawImage(img, xPosition, yPosition);
+    }
+    public void drawWindow() {
+        
     }
     public double getWidth() {return WIDTH;}
     public double getHeight() {return HEIGHT;}

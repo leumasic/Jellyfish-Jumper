@@ -9,13 +9,14 @@ public class Jellyfish extends Entity {
     private double width, height;
 
     public Jellyfish(double xPosition, double yPosition, double width, double height) {
-        super(xPosition, yPosition);
+        super(xPosition, yPosition, 0, 0, 0, 0);
 
         // Default the jellyfish's orientation to LEFT
         orientation = Orientation.LEFT;
 
         xAcceleration = 0.0;
         yAcceleration = 0.0;
+
         xSpeed = 0.0;
         ySpeed = 0.0;
         
@@ -23,7 +24,8 @@ public class Jellyfish extends Entity {
         this.height = height;
     }
 
-    public void update(double timeDelta, double xBound) {
+    public void update(double timeDelta, double bound) {
+        
         // Update jellyfish's velocities
         xSpeed += timeDelta * xAcceleration;
         ySpeed += timeDelta * yAcceleration;
@@ -32,16 +34,16 @@ public class Jellyfish extends Entity {
         xPosition += xSpeed * timeDelta;
         yPosition += ySpeed * timeDelta;
 
-        if (xPosition + getWidth() / 2 > xBound || xPosition - getWidth() / 2 < 0) {
+        if (xPosition + getWidth() / 2 > bound || xPosition - getWidth() / 2 < 0) {
             xSpeed *= -0.9;
         }
 
-        xPosition = Math.min(xPosition, xBound - getWidth() / 2);
+        xPosition = Math.min(xPosition, bound - getWidth() / 2);
         xPosition = Math.max(xPosition, getWidth() / 2);
     }
 
     public void jump() {
-        ySpeed += 600;
+        ySpeed += -600.0;
     }
     public void moveLeft() {
         this.xAcceleration = -1200.0;
@@ -50,14 +52,8 @@ public class Jellyfish extends Entity {
         this.xAcceleration = 1200.0;
     }
 
-    @Override
-    public double getWidth() {
-        return 50;
-    }
-    @Override
-    public double getHeight() {
-        return 50;
-    }
+    public double getWidth() { return width; }
+    public double getHeight() { return height; }
 
     public enum Orientation {
         LEFT,

@@ -25,19 +25,31 @@ public class Controller {
 
         // Set the animation frames with the jellfish's dimensions
         this.leftFacingJellyfishFrames = new Image[] {
-                new Image("/assets/jellyfish1g.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false, false),
-                new Image("/assets/jellyfish2g.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false, false),
-                new Image("/assets/jellyfish3g.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false, false),
-                new Image("/assets/jellyfish4g.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false, false),
-                new Image("/assets/jellyfish5g.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false, false),
-                new Image("/assets/jellyfish6g.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false, false) };
+                new Image("/assets/jellyfish1g.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false,
+                        false),
+                new Image("/assets/jellyfish2g.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false,
+                        false),
+                new Image("/assets/jellyfish3g.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false,
+                        false),
+                new Image("/assets/jellyfish4g.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false,
+                        false),
+                new Image("/assets/jellyfish5g.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false,
+                        false),
+                new Image("/assets/jellyfish6g.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false,
+                        false) };
         this.rightFacingJellyfishFrames = new Image[] {
-                new Image("/assets/jellyfish1.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false, false),
-                new Image("/assets/jellyfish2.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false, false),
-                new Image("/assets/jellyfish3.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false, false),
-                new Image("/assets/jellyfish4.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false, false),
-                new Image("/assets/jellyfish5.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false, false),
-                new Image("/assets/jellyfish6.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false, false) };
+                new Image("/assets/jellyfish1.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false,
+                        false),
+                new Image("/assets/jellyfish2.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false,
+                        false),
+                new Image("/assets/jellyfish3.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false,
+                        false),
+                new Image("/assets/jellyfish4.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false,
+                        false),
+                new Image("/assets/jellyfish5.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false,
+                        false),
+                new Image("/assets/jellyfish6.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false,
+                        false) };
     }
 
     public void startGame() {
@@ -54,7 +66,7 @@ public class Controller {
         AnimationTimer timer = new AnimationTimer() {
             private long startTime = 0;
             private long lastTime = 0;
-            
+
             @Override
             public void handle(long now) {
                 if (startTime == 0) {
@@ -63,7 +75,7 @@ public class Controller {
                     return;
                 }
 
-                // Update the jellyfish's position 
+                // Update the game
                 double deltaTimeSinceLast = (now - lastTime) * 1e-9;
                 game.update(deltaTimeSinceLast);
 
@@ -80,7 +92,8 @@ public class Controller {
                 }
 
                 // Draw jellyfish
-                view.drawImage(img, game.jellyfish.getX(), game.jellyfish.getY());
+                view.drawImage(img, game.jellyfish.getX() - game.window.getX(),
+                        game.jellyfish.getY() - game.window.getY());
 
                 // Set last time to current time
                 lastTime = now;
@@ -116,6 +129,7 @@ public class Controller {
     public void resumeGame() {
         moveWindow();
     }
+
     public void stopGame() {
         stopWindow();
     }
@@ -129,6 +143,7 @@ public class Controller {
 
         game.jellyfish.moveLeft();
     }
+
     public void handleKeyRight() {
         if (game.isPlaying())
             startGame();
@@ -138,9 +153,16 @@ public class Controller {
 
         game.jellyfish.moveRight();
     }
-    public void handleKeyUp() {
 
+    public void handleKeyUp() {
+        game.jellyfish.jump();
     }
+
     public void enterDebugMode() {
+    }
+
+    public void stopJellyfish() {
+        game.jellyfish.setHorizontalAcceleration(0.0);
+        game.jellyfish.setHorizontalVelocity(0.0);
     }
 }
