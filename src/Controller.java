@@ -55,10 +55,10 @@ public class Controller {
         inDebugMode = false;
 
         // Start animating the jellyfish
-        animateJellyfish();
+        animateGame();
     }
 
-    private void animateJellyfish() {
+    private void animateGame() {
         double frameRate = 8 * 1e-9;
         AnimationTimer timer = new AnimationTimer() {
             private long startTime = 0;
@@ -174,7 +174,7 @@ public class Controller {
             animateWindow();
         }
 
-        game.jellyfish.jump();
+        game.jellyfishJump();
     }
 
     public void toggleDebugMode() {

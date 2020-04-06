@@ -1,13 +1,18 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import components.*;
 
 public class Game {
 
+    private static int platformsInMemory = 15;
+    private static int platformsVerticalSpacing = 100;
+
     protected Window window;
     protected Jellyfish jellyfish;
-    private ArrayList<Platform> platforms;
     private ArrayList<Bubble> bubbles;
+    private Queue<Platform> platforms;
     private Boolean gameOver;
 
     private double width, height;
@@ -29,6 +34,9 @@ public class Game {
 
         // Instantiate window
         this.window = new Window(0, 0);
+
+        // Instantiate platforms
+        platforms = getNPlatforms(platformsInMemory, height - platformsVerticalSpacing);
     }
     public void restartGame() {
         // Set playing to false
@@ -50,22 +58,33 @@ public class Game {
     }
     public void updateGame(double timeDelta) {
         // If jellyfish is below the windows's vertical position, then game over
-        if (jellyfish.getY() - window.getY() > 480) {
+        if (jellyfish.getY() - window.getY() > height) {
             gameOver = true;
         }
 
         updateJellyfish(timeDelta);
+        updatePlatforms();
     }
     public void updateScore() {
         this.score = (long) Math.abs(window.getY());
     }
-    public void updatePlatforms(double timeDelta) {
+    public void updatePlatforms() {
         // Every 400m, remove old platforms, render new ones
-
     }
     public void updateJellyfish(double timeDelta) {
-        // Loop through all platforms and check whether the jellyfish is on any of them
+        // Loop through all NEARBY `platforms and check whether the jellyfish is on any of them
         // If yes, set the jellyfish's vertical acceleration and velocity to 0
+        /*
+        for (Platform platform: platforms) {
+
+            if (true) {
+                jellyfishOnPlatform = true;
+                jellyfish.setY(Math.min(jellyfish.getY(), height - jellyfish.getHeight() / 2));
+                jellyfish.setY(Math.max(jellyfish.getY(), jellyfish.getHeight()/2));
+            }
+        }
+        */
+
         if (jellyfishOnPlatform) {
             jellyfish.setVerticalAcceleration(0);
             jellyfish.setVerticalVelocity(0);
@@ -82,6 +101,44 @@ public class Game {
         // Show bubbles if % 5 seconds
 
     }
+    public void jellyfishJump() {
+        jellyfishOnPlatform = false;
+        jellyfish.jump();
+    }
     public boolean isGameOver() {return gameOver;}
     public double getScore() {return score;}
+
+    private LinkedList<Platform> getNPlatforms(int n, double startY) {
+        LinkedList<Platform> generatedPlatforms = new LinkedList<Platform>();
+        boolean lastAddedWasSolid = false;
+
+        for (int i = 0; i < n; i++) {
+            Platform platformToAdd;
+
+            double rand = Math.random();
+            double platformWidth = 80.0 + (95.0 * rand);
+            double platformX = Math.min(width * rand, width - platformWidth);
+            double platformY = startY + (i * platformsVerticalSpacing);
+
+            if (!lastAddedWasSolid) {
+                if (rand < 0.65) {
+                    platformToAdd = new SimplePlatform(platformX, platformY, platformWidth, 10);
+                } else if (rand >= 0.65 && rand < 0.85) {
+                    platformToAdd = new BouncyPlatform(platformX, platformY, platformWidth, 10);
+                } else if (rand >= 0.85 & rand < 0.95) {
+                    platformToAdd = new AcceleratingPlatform(platformX, platformY, platformWidth, 10);
+                } else {
+                    platformToAdd = new SolidPlatform(platformX, platformY, platformWidth, 10);
+                    lastAddedWasSolid = true;
+                }
+            } else {
+                platformToAdd = new SimplePlatform(platformX, platformY, platformWidth, 10);
+                lastAddedWasSolid = false;
+            }
+
+            generatedPlatforms.add(platformToAdd);
+        }
+
+        return generatedPlatforms;
+    }
 }
