@@ -1,18 +1,17 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Queue;
 
 import components.*;
 
 public class Game {
 
     private static int platformsInMemory = 15;
-    private static int platformsVerticalSpacing = 100;
+    private static double platformsVerticalSpacing = 100;
 
     protected Window window;
     protected Jellyfish jellyfish;
     private ArrayList<Bubble> bubbles;
-    private Queue<Platform> platforms;
+    private LinkedList<Platform> platforms;
     private Boolean gameOver;
 
     private double width, height;
@@ -63,20 +62,28 @@ public class Game {
         }
 
         updateJellyfish(timeDelta);
-        updatePlatforms();
+        updatePlatforms(5);
     }
     public void updateScore() {
         this.score = (long) Math.abs(window.getY());
     }
-    public void updatePlatforms() {
-        // Every 400m, remove old platforms, render new ones
+    public void updatePlatforms(int numPlatformsToVerify) {
+        if (numPlatformsToVerify > platformsInMemory) {
+            throw new IllegalArgumentException("Number of platforms to verify greater than that in memory");
+        }
+
+        // Update the platforms after numPlatformsToVerify of them are below the window
+        if (platforms.peek().getY() - window.getY() > platformsVerticalSpacing * numPlatformsToVerify) {
+            removeNPlatforms(numPlatformsToVerify);
+            getNPlatforms(numPlatformsToVerify, platforms.getLast().getY());
+        }
     }
     public void updateJellyfish(double timeDelta) {
         // Loop through all NEARBY `platforms and check whether the jellyfish is on any of them
         // If yes, set the jellyfish's vertical acceleration and velocity to 0
         /*
         for (Platform platform: platforms) {
-
+            
             if (true) {
                 jellyfishOnPlatform = true;
                 jellyfish.setY(Math.min(jellyfish.getY(), height - jellyfish.getHeight() / 2));
@@ -107,7 +114,12 @@ public class Game {
     }
     public boolean isGameOver() {return gameOver;}
     public double getScore() {return score;}
+    private void removeNPlatforms(int n) {
+        if (n > platformsInMemory) {
+            throw new IllegalArgumentException("Number of platforms to remove greater than that in memory");
+        }
 
+    }
     private LinkedList<Platform> getNPlatforms(int n, double startY) {
         LinkedList<Platform> generatedPlatforms = new LinkedList<Platform>();
         boolean lastAddedWasSolid = false;
@@ -117,7 +129,7 @@ public class Game {
 
             double rand = Math.random();
             double platformWidth = 80.0 + (95.0 * rand);
-            double platformX = Math.min(width * rand, width - platformWidth);
+            double platformX = rand * (width - platformWidth);
             double platformY = startY + (i * platformsVerticalSpacing);
 
             if (!lastAddedWasSolid) {
