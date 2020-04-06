@@ -1,4 +1,5 @@
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -8,8 +9,8 @@ import javafx.stage.Stage;
 
 public class View extends Application {
 
-    protected static double WIDTH = 350;
-    protected static double HEIGHT = 480;
+    private double WIDTH = 350;
+    private double HEIGHT = 480;
 
     // Graphical Elements
     GraphicsContext context;
@@ -51,7 +52,7 @@ public class View extends Application {
                 case T:
                     controller.enterDebugMode();
                 case ESCAPE:
-                    // Exit game
+                    Platform.exit();
                     break;
             }
         });
@@ -70,4 +71,6 @@ public class View extends Application {
         context.clearRect(0, 0, WIDTH, HEIGHT);
         context.drawImage(img, xPosition, yPosition);
     }
+    public double getWidth() {return WIDTH;}
+    public double getHeight() {return HEIGHT;}
 }

@@ -21,7 +21,7 @@ public class Controller {
         this.view = view;
 
         // Instantiate the game
-        this.game = new Game(0.0, view.WIDTH, 0.0, view.HEIGHT);
+        this.game = new Game(view.getWidth(), view.getHeight());
 
         // Set the animation frames with the jellfish's dimensions
         this.leftFacingJellyfishFrames = new Image[] {
@@ -65,7 +65,7 @@ public class Controller {
 
                 // Update the jellyfish's position 
                 double deltaTimeSinceLast = (now - lastTime) * 1e-9;
-                game.jellyfish.update(deltaTimeSinceLast);
+                game.update(deltaTimeSinceLast);
 
                 // Update the jellyfish's frame (orientation)
                 double deltaTimeSinceStart = (now - startTime);

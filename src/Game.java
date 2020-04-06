@@ -9,33 +9,29 @@ public class Game {
     private ArrayList<Platform> platforms;
     private ArrayList<Bubble> bubbles;
     private Boolean playing;
-    
-    private double topBound, bottomBound;
-    private double leftBound, rightBound;
 
-    public Game(double leftBound, double rightBound, double topBound, double bottomBound) {
+    private double width, height;
+
+    public Game(double width, double height) {
 
         // Set the bounds of the game
-        this.leftBound = leftBound;
-        this.rightBound = rightBound;
-        this.topBound = topBound;
-        this.bottomBound = bottomBound;
+        this.width = width;
+        this.height = height;
 
         // Set whether or not the game has started
         this.playing = false;
 
         // Instantiate a jellyfish
-        this.jellyfish = new Jellyfish(150, 300);
+        this.jellyfish = new Jellyfish(150, 300, 50, 50);
 
     }
-
+    public void update(double timeDelta) {
+        jellyfish.update(timeDelta, width);
+    }
     public void startGame() {
 
         // Set the status of playing to true
         playing = true;
-
-        // Instantiate the jellyfish
-        this.jellyfish = new Jellyfish(50, 0);
 
         // Start to move the screen down; use AnimationTimer
         // moveWindow();
