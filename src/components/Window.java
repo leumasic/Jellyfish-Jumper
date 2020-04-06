@@ -1,20 +1,17 @@
 package components;
 
-public class Window {
-    private double yPosition;
-    private double ySpeed;
+public class Window extends Entity {
 
-    public Window(double yPosition) {
-        // Set initial position
-        this.yPosition = yPosition;
+    public Window(double xPosition, double yPosition) {
+        super(xPosition, yPosition);
+    }
 
-        // Initial speed defaults to 50px/s
-        this.ySpeed = 50;
+    @Override
+    public double getHeight() {
+        return 300;
     }
-    public void updatePosition(double timeDelta) {
-        yPosition += ySpeed * timeDelta + Math.pow(timeDelta, 2);
-    }
-    public void updateSpeed(double timeDelta) {
-        ySpeed += timeDelta * 2;
+    @Override
+    public double getWidth() {
+        return 300;
     }
 }

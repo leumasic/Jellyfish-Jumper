@@ -1,22 +1,13 @@
 import java.util.ArrayList;
 
 import components.*;
+import components.Jellyfish.Orientation;
 import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
 
 public class Controller {
     
-    // Allows the controller to modify the view internally
-    private View view;
-
-    private Window window;
-    private Jellyfish jellyfish;
-    private ArrayList<Platform> platforms;
-    private ArrayList<Bubble> bubbles;
-    private AnimationTimer timer;
-    private Boolean gameStarted;
-
-    private Image[] moveRightFrames = new Image[] {
+    private Image[] jellyfishFacingRightFrames = new Image[] {
         new Image("/assets/jellyfish1.png", 50, 50, false, false),
         new Image("/assets/jellyfish2.png", 50, 50, false, false),
         new Image("/assets/jellyfish3.png", 50, 50, false, false),
@@ -25,7 +16,7 @@ public class Controller {
         new Image("/assets/jellyfish6.png", 50, 50, false, false)
     };
 
-    private Image[] moveLeftFrames = new Image[] {
+    private Image[] jellyfishFacingLeftFrames = new Image[] {
         new Image("/assets/jellyfish1g.png", 50, 50, false, false),
         new Image("/assets/jellyfish2g.png", 50, 50, false, false),
         new Image("/assets/jellyfish3g.png", 50, 50, false, false),
@@ -34,22 +25,64 @@ public class Controller {
         new Image("/assets/jellyfish6g.png", 50, 50, false, false)
     };
 
+    // Allows the controller to modify the view internally
+    private View view;
+
+    private Window window;
+    private Jellyfish jellyfish;
+    private ArrayList<Platform> platforms;
+    private ArrayList<Bubble> bubbles;
+    private AnimationTimer timer;
+    private Boolean playing;
+
     public Controller(View view) {
         // Set view to modify
         this.view = view;
 
         // Set whether or not the game has started
-        this.gameStarted = false;
+        this.playing = false;
     }
 
     public void startGame() {
-        // Place the medusa
-        gameStarted = true;
+
+        // Set the status of playing to true
+        playing = true;
+
+        // Instantiate jellyfish and start animating it
+        jellyfish = new Jellyfish(0, 0);
+        animateJellyfish();
 
         // Start to move the screen down; use AnimationTimer
         // moveWindow();
     }
+    private void animateJellyfish() {
+        double frameRate = 8 * 1e-9;
+        AnimationTimer timer = new AnimationTimer(){
+            private long startTime = 0;
 
+            @Override
+            public void handle(long now) {
+                if (startTime == 0) {
+                    startTime = now;
+                    return;
+                }
+
+                double deltaTime = now - startTime;
+                int frame = (int) (deltaTime * frameRate);
+
+                Image img;
+
+                if (jellyfish.getOrientation() == Orientation.LEFT) {
+                    img = jellyfishFacingLeftFrames[frame % jellyfishFacingLeftFrames.length];
+                } else {
+                    img = jellyfishFacingRightFrames[frame % jellyfishFacingRightFrames.length];
+                }
+
+                view.drawJellyfish(img);
+            }
+        };
+        timer.start();
+    }
     private void moveWindow() {
         timer = new AnimationTimer(){
             private long lastTime = 0;
@@ -63,11 +96,6 @@ public class Controller {
 
                 double timeDelta = (now - lastTime) * 1e-9;
                 
-                window.updateSpeed(timeDelta);
-                window.updatePosition(timeDelta);
-
-                view.updateWindowPosition();
-
                 lastTime = now;
             }
         };
@@ -79,31 +107,38 @@ public class Controller {
         timer.stop();
     }
 
+
     public void resumeGame() {
-        gameStarted = true;
+        playing = true;
         moveWindow();
     }
+    public void pauseGame() {
+        
+    }
     public void stopGame() {
-        gameStarted = false;
+        playing = false;
         stopWindow();
     }
 
     public void handleKeyLeft() {
-        if (!gameStarted) startGame();
+        if (!playing) startGame();
 
-        
+        if (jellyfish.getOrientation() != Orientation.LEFT)
+            jellyfish.setOrientation(Orientation.LEFT);
     }
     public void handleKeyRight() {
-        if (!gameStarted) startGame();
+        if (!playing) startGame();
 
-
+        if (jellyfish.getOrientation() != Orientation.RIGHT)
+            jellyfish.setOrientation(Orientation.RIGHT);
     }
     public void handleKeyUp() {
-        if (!gameStarted) startGame();
+        if (!playing) startGame();
 
 
     }
     public void enterDebugMode() {
-
+        pauseGame();
+        
     }
 }
