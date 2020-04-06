@@ -13,44 +13,34 @@ public class Controller {
     // Allows the controller to modify the view internally
     private View view;
 
-    private Window window;
-    private Jellyfish jellyfish;
-    private ArrayList<Platform> platforms;
-    private ArrayList<Bubble> bubbles;
     private AnimationTimer timer;
-    private Boolean playing;
+    private Game game;
 
     public Controller(View view) {
         // Set view to modify
         this.view = view;
 
-        // Set whether or not the game has started
-        this.playing = false;
-
-        // Instantiate a jellyfish
-        this.jellyfish = new Jellyfish(50, 0);
+        // Instantiate the game
+        this.game = new Game(0.0, view.WIDTH, 0.0, view.HEIGHT);
 
         // Set the animation frames with the jellfish's dimensions
         this.leftFacingJellyfishFrames = new Image[] {
-                new Image("/assets/jellyfish1g.png", jellyfish.getWidth(), jellyfish.getHeight(), false, false),
-                new Image("/assets/jellyfish2g.png", jellyfish.getWidth(), jellyfish.getHeight(), false, false),
-                new Image("/assets/jellyfish3g.png", jellyfish.getWidth(), jellyfish.getHeight(), false, false),
-                new Image("/assets/jellyfish4g.png", jellyfish.getWidth(), jellyfish.getHeight(), false, false),
-                new Image("/assets/jellyfish5g.png", jellyfish.getWidth(), jellyfish.getHeight(), false, false),
-                new Image("/assets/jellyfish6g.png", jellyfish.getWidth(), jellyfish.getHeight(), false, false) };
+                new Image("/assets/jellyfish1g.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false, false),
+                new Image("/assets/jellyfish2g.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false, false),
+                new Image("/assets/jellyfish3g.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false, false),
+                new Image("/assets/jellyfish4g.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false, false),
+                new Image("/assets/jellyfish5g.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false, false),
+                new Image("/assets/jellyfish6g.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false, false) };
         this.rightFacingJellyfishFrames = new Image[] {
-                new Image("/assets/jellyfish1.png", jellyfish.getWidth(), jellyfish.getHeight(), false, false),
-                new Image("/assets/jellyfish2.png", jellyfish.getWidth(), jellyfish.getHeight(), false, false),
-                new Image("/assets/jellyfish3.png", jellyfish.getWidth(), jellyfish.getHeight(), false, false),
-                new Image("/assets/jellyfish4.png", jellyfish.getWidth(), jellyfish.getHeight(), false, false),
-                new Image("/assets/jellyfish5.png", jellyfish.getWidth(), jellyfish.getHeight(), false, false),
-                new Image("/assets/jellyfish6.png", jellyfish.getWidth(), jellyfish.getHeight(), false, false) };
+                new Image("/assets/jellyfish1.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false, false),
+                new Image("/assets/jellyfish2.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false, false),
+                new Image("/assets/jellyfish3.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false, false),
+                new Image("/assets/jellyfish4.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false, false),
+                new Image("/assets/jellyfish5.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false, false),
+                new Image("/assets/jellyfish6.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false, false) };
     }
 
     public void startGame() {
-
-        // Set the status of playing to true
-        playing = true;
 
         // Start animating the jellyfish
         animateJellyfish();
@@ -75,7 +65,7 @@ public class Controller {
 
                 // Update the jellyfish's position 
                 double deltaTimeSinceLast = (now - lastTime) * 1e-9;
-                jellyfish.update(deltaTimeSinceLast);
+                game.jellyfish.update(deltaTimeSinceLast);
 
                 // Update the jellyfish's frame (orientation)
                 double deltaTimeSinceStart = (now - startTime);
@@ -83,14 +73,14 @@ public class Controller {
 
                 Image img;
 
-                if (jellyfish.getOrientation() == Orientation.LEFT) {
+                if (game.jellyfish.getOrientation() == Orientation.LEFT) {
                     img = leftFacingJellyfishFrames[frame % leftFacingJellyfishFrames.length];
                 } else {
                     img = rightFacingJellyfishFrames[frame % rightFacingJellyfishFrames.length];
                 }
 
                 // Draw jellyfish
-                view.drawJellyfish(img, jellyfish.getX(), jellyfish.getY());
+                view.drawImage(img, game.jellyfish.getX(), game.jellyfish.getY());
 
                 // Set last time to current time
                 lastTime = now;
@@ -124,42 +114,33 @@ public class Controller {
     }
 
     public void resumeGame() {
-        playing = true;
         moveWindow();
     }
     public void stopGame() {
-        playing = false;
         stopWindow();
     }
 
     public void handleKeyLeft() {
-        if (!playing)
+        if (game.isPlaying())
             startGame();
 
-        if (jellyfish.getOrientation() != Orientation.LEFT)
-            jellyfish.setOrientation(Orientation.LEFT);
+        if (game.jellyfish.getOrientation() != Orientation.LEFT)
+            game.jellyfish.setOrientation(Orientation.LEFT);
 
-        jellyfish.moveLeft();
+        game.jellyfish.moveLeft();
     }
-
     public void handleKeyRight() {
-        if (!playing)
+        if (game.isPlaying())
             startGame();
 
-        if (jellyfish.getOrientation() != Orientation.RIGHT)
-            jellyfish.setOrientation(Orientation.RIGHT);
+        if (game.jellyfish.getOrientation() != Orientation.RIGHT)
+            game.jellyfish.setOrientation(Orientation.RIGHT);
 
-        jellyfish.moveRight();
+        game.jellyfish.moveRight();
     }
-
     public void handleKeyUp() {
-        if (!playing)
-            startGame();
 
     }
-
     public void enterDebugMode() {
-        playing = false;
-
     }
 }

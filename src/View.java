@@ -8,8 +8,8 @@ import javafx.stage.Stage;
 
 public class View extends Application {
 
-    private static double WIDTH = 300;
-    private static double HEIGHT = 300;
+    protected static double WIDTH = 350;
+    protected static double HEIGHT = 480;
 
     // Graphical Elements
     GraphicsContext context;
@@ -50,10 +50,13 @@ public class View extends Application {
                     break;
                 case T:
                     controller.enterDebugMode();
+                case ESCAPE:
+                    // Exit game
+                    break;
             }
         });
 
-        primaryStage.setTitle("HighSeaTower");
+        primaryStage.setTitle("High Sea Tower");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -62,8 +65,9 @@ public class View extends Application {
 
     }
 
-    public void drawJellyfish(Image img, double xPosition, double yPosition) {
-        context.clearRect(xPosition, yPosition, img.getWidth(), img.getHeight());
+    public void drawImage(Image img, double xPosition, double yPosition) {
+        // context.clearRect(xPosition, yPosition, img.getWidth(), img.getHeight());
+        context.clearRect(0, 0, WIDTH, HEIGHT);
         context.drawImage(img, xPosition, yPosition);
     }
 }
