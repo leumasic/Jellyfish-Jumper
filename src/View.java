@@ -38,18 +38,17 @@ public class View extends Application {
 
         Canvas backgroundCanvas = new Canvas(WIDTH, HEIGHT);
         root.getChildren().add(backgroundCanvas);
-
         GraphicsContext backgroundContext = backgroundCanvas.getGraphicsContext2D();
         backgroundContext.setFill(Color.rgb(10, 24, 173));
         backgroundContext.fillRect(0, 0, 350, 480);
 
-        Canvas imageCanvas = new Canvas(WIDTH, HEIGHT);
-        root.getChildren().add(imageCanvas);
-        imageContext = imageCanvas.getGraphicsContext2D();
-
         Canvas rectanglesCanvas = new Canvas(WIDTH, HEIGHT);
         root.getChildren().add(rectanglesCanvas);
         rectanglesContext = rectanglesCanvas.getGraphicsContext2D();
+
+        Canvas imageCanvas = new Canvas(WIDTH, HEIGHT);
+        root.getChildren().add(imageCanvas);
+        imageContext = imageCanvas.getGraphicsContext2D();
 
         controller.startGame();
         

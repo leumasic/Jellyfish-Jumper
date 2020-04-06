@@ -106,11 +106,7 @@ public class Controller {
                 if (firstPlaformVerticalPosition != game.getPlatforms().peek().getY()) {
 
                     ListIterator<Platform> platformIterator;
-                    if (game.isGameOver()) {
-                        platformIterator = game.getPlatforms().listIterator(0);
-                    } else {
-                        platformIterator = game.getPlatforms().listIterator(10);
-                    }
+                    platformIterator = game.getPlatforms().listIterator(0);
 
                     while (platformIterator.hasNext()) {
                         Platform platformToDraw = platformIterator.next();

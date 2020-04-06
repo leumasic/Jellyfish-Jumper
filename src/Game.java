@@ -60,8 +60,6 @@ public class Game {
         // If jellyfish is below the windows's vertical position, then game over
         if (jellyfish.getY() - window.getY() > height) {
             gameOver = true;
-        } else {
-            gameOver = false;
         }
 
         updateJellyfish(timeDelta);
@@ -133,7 +131,7 @@ public class Game {
             double rand = Math.random();
             double platformWidth = 80.0 + (95.0 * rand);
             double platformX = rand * (width - platformWidth);
-            double platformY = startY + (i * verticalSpaceBetweenPlatforms);
+            double platformY = startY + (-i * verticalSpaceBetweenPlatforms);
 
             if (!lastAddedWasSolid) {
                 if (rand < 0.65) {
