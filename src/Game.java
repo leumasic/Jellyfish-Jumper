@@ -28,14 +28,9 @@ public class Game {
         this.jellyfishOnPlatform = true;
 
         // Instantiate window
-        this.window = new Window(0, 0); 
+        this.window = new Window(0, 0);
     }
     public void update(double timeDelta) {
-
-        // Move the window up
-        window.update(timeDelta);
-        System.out.println(window.getVerticalVelocity());
-
         // Loop through all platforms and check whether the jellyfish is on any of them
         // If yes, set the jellyfish's vertical acceleration and velocity to 0
         if (jellyfishOnPlatform) {
@@ -50,6 +45,9 @@ public class Game {
         // Show bubbles if % 5 seconds
 
         // Every 400m, remove old platforms, render new ones
+    }
+    public void updateWindow(double timeDelta) {
+        window.update(timeDelta);
     }
     public void startGame() {
 

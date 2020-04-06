@@ -15,8 +15,9 @@ public class View extends Application {
     private double HEIGHT = 480;
 
     // Graphical Elements
-    GraphicsContext context;
-
+    GraphicsContext imageContext;
+    GraphicsContext rectanglesContext; 
+    
     // Application Controller
     private Controller controller;
 
@@ -35,16 +36,20 @@ public class View extends Application {
         Pane root = new Pane();
         Scene scene = new Scene(root);
 
-        Canvas background = new Canvas(WIDTH, HEIGHT);
-        root.getChildren().add(background);
+        Canvas backgroundCanvas = new Canvas(WIDTH, HEIGHT);
+        root.getChildren().add(backgroundCanvas);
 
-        GraphicsContext backgroundContext = background.getGraphicsContext2D();
+        GraphicsContext backgroundContext = backgroundCanvas.getGraphicsContext2D();
         backgroundContext.setFill(Color.rgb(10, 24, 173));
         backgroundContext.fillRect(0, 0, 350, 480);
 
-        Canvas canvas = new Canvas(WIDTH, HEIGHT);
-        root.getChildren().add(canvas);
-        context = canvas.getGraphicsContext2D();
+        Canvas imageCanvas = new Canvas(WIDTH, HEIGHT);
+        root.getChildren().add(imageCanvas);
+        imageContext = imageCanvas.getGraphicsContext2D();
+
+        Canvas rectanglesCanvas = new Canvas(WIDTH, HEIGHT);
+        root.getChildren().add(rectanglesCanvas);
+        rectanglesContext = rectanglesCanvas.getGraphicsContext2D();
 
         controller.startGame();
 
@@ -61,6 +66,7 @@ public class View extends Application {
                     break;
                 case T:
                     controller.enterDebugMode();
+                    break;
                 case ESCAPE:
                     Platform.exit();
                     break;
@@ -79,11 +85,12 @@ public class View extends Application {
     }
     public void drawImage(Image img, double xPosition, double yPosition) {
         // context.clearRect(xPosition, yPosition, img.getWidth(), img.getHeight());
-        context.clearRect(0, 0, WIDTH, HEIGHT);
-        context.drawImage(img, xPosition, yPosition);
+        imageContext.clearRect(0, 0, WIDTH, HEIGHT);
+        imageContext.drawImage(img, xPosition, yPosition);
     }
-    public void drawWindow() {
-        
+    public void drawRectangle(double xPosition, double yPosition, double width, double height, Color color) {
+        rectanglesContext.setFill(color);
+        rectanglesContext.fillRect(xPosition, yPosition, width, height);        
     }
     public double getWidth() {return WIDTH;}
     public double getHeight() {return HEIGHT;}

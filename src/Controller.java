@@ -13,7 +13,7 @@ public class Controller {
     // Allows the controller to modify the view internally
     private View view;
 
-    private AnimationTimer timer;
+    private AnimationTimer windowTimer;
     private Game game;
 
     public Controller(View view) {
@@ -56,7 +56,7 @@ public class Controller {
 
         // Start animating the jellyfish
         animateJellyfish();
-
+        moveWindow();
         // Start to move the screen down; use AnimationTimer
         // moveWindow();
     }
@@ -103,7 +103,7 @@ public class Controller {
     }
 
     private void moveWindow() {
-        timer = new AnimationTimer() {
+        windowTimer = new AnimationTimer() {
             private long lastTime = 0;
 
             @Override
@@ -115,15 +115,17 @@ public class Controller {
 
                 double timeDelta = (now - lastTime) * 1e-9;
 
+                game.updateWindow(timeDelta);
+
                 lastTime = now;
             }
         };
 
-        timer.start();
+        windowTimer.start();
     }
 
     private void stopWindow() {
-        timer.stop();
+        windowTimer.stop();
     }
 
     public void resumeGame() {
@@ -159,6 +161,9 @@ public class Controller {
     }
 
     public void enterDebugMode() {
+        stopWindow();
+
+
     }
 
     public void stopJellyfish() {
