@@ -62,8 +62,8 @@ public class View extends Application {
 
     }
 
-    public void drawJellyfish(Image img) {
-        context.clearRect(0, 0, img.getWidth(), img.getHeight());
-        context.drawImage(img, 0, 0);
+    public void drawJellyfish(Image img, double xPosition, double yPosition) {
+        context.clearRect(xPosition, yPosition, img.getWidth(), img.getHeight());
+        context.drawImage(img, xPosition, yPosition);
     }
 }
