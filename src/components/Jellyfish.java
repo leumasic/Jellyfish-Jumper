@@ -1,23 +1,36 @@
 package components;
 
-public class Jellyfish {
+public class Jellyfish extends Entity {
+    
+    public Jellyfish(double xPosition, double yPosition) {
+        super(xPosition, yPosition);
+    }
 
-    private double width, height;
-    private double xPosition, yPosition;
+    public void update(double timeDelta) {
+        // Update jellyfish's velocities
+        xSpeed += timeDelta * xAcceleration;
+        ySpeed += timeDelta * yAcceleration;
 
-
-    public Jellyfish() {
-        // Width and height of the medusa are defaulted to 50px by 50px
-        this.width = 50;
-        this.height = 50;
+        // Update jellyfish's position
+        xPosition += xSpeed * timeDelta;
+        ySpeed += ySpeed * timeDelta;
     }
     public void jump() {
-
+        ySpeed += 600;
     }
     public void moveLeft() {
 
     }
     public void moveRight() {
 
+    }
+
+    @Override
+    public double getWidth() {
+        return 50;
+    }
+    @Override
+    public double getHeight() {
+        return 50;
     }
 }

@@ -1,23 +1,27 @@
 package components;
 
-public class Platform {
+public class Platform extends Entity {
     private double width, height;
-    private double xPosition, yPosition;
 
-    public Platform(double width, double height) {
+    private Boolean bouncy;
+    private Boolean accelerating;
+    private Boolean solid;
 
+    public Platform(double xPosition, double yPosition, double width, double height) {
+        super(xPosition, yPosition);
+        
         // Set the width and the height of the platform
         this.width = width;
         this.height = height;
 
-        /**
-         * 
-         */
-        double rand = Math.random();
     }
-}
 
-enum State {
-    PASSTHROUGH,
-    SOLID,
+    @Override
+    public double getHeight() {
+        return height;
+    }
+    @Override
+    public double getWidth() {
+        return width;
+    }
 }

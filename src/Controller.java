@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 import components.*;
 import javafx.animation.AnimationTimer;
+import javafx.scene.image.Image;
 
 public class Controller {
     
@@ -14,6 +15,24 @@ public class Controller {
     private ArrayList<Bubble> bubbles;
     private AnimationTimer timer;
     private Boolean gameStarted;
+
+    private Image[] moveRightFrames = new Image[] {
+        new Image("/assets/jellyfish1.png", 50, 50, false, false),
+        new Image("/assets/jellyfish2.png", 50, 50, false, false),
+        new Image("/assets/jellyfish3.png", 50, 50, false, false),
+        new Image("/assets/jellyfish4.png", 50, 50, false, false),
+        new Image("/assets/jellyfish5.png", 50, 50, false, false),
+        new Image("/assets/jellyfish6.png", 50, 50, false, false)
+    };
+
+    private Image[] moveLeftFrames = new Image[] {
+        new Image("/assets/jellyfish1g.png", 50, 50, false, false),
+        new Image("/assets/jellyfish2g.png", 50, 50, false, false),
+        new Image("/assets/jellyfish3g.png", 50, 50, false, false),
+        new Image("/assets/jellyfish4g.png", 50, 50, false, false),
+        new Image("/assets/jellyfish5g.png", 50, 50, false, false),
+        new Image("/assets/jellyfish6g.png", 50, 50, false, false)
+    };
 
     public Controller(View view) {
         // Set view to modify
@@ -72,7 +91,7 @@ public class Controller {
     public void handleKeyLeft() {
         if (!gameStarted) startGame();
 
-
+        
     }
     public void handleKeyRight() {
         if (!gameStarted) startGame();

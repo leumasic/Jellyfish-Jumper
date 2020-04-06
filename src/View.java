@@ -9,8 +9,8 @@ import javafx.stage.Stage;
 
 public class View extends Application {
 
-    private static double width = 300;
-    private static double height = 300;
+    private static double WIDTH = 300;
+    private static double HEIGHT = 300;
 
     // Graphical Elements
     GraphicsContext context;
@@ -32,7 +32,7 @@ public class View extends Application {
 
         Pane root = new Pane();
         Scene scene = new Scene(root);
-        Canvas canvas = new Canvas(width, height);
+        Canvas canvas = new Canvas(WIDTH, HEIGHT);
         root.getChildren().add(canvas);
         context = canvas.getGraphicsContext2D();
 
