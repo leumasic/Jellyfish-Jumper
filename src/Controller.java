@@ -1,3 +1,6 @@
+import java.util.ListIterator;
+
+import components.Platform;
 import components.Jellyfish.Orientation;
 import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
@@ -63,6 +66,7 @@ public class Controller {
         AnimationTimer timer = new AnimationTimer() {
             private long startTime = 0;
             private long lastTime = 0;
+            private double firstPlaformVerticalPosition = -50;
 
             @Override
             public void handle(long now) {
@@ -74,9 +78,9 @@ public class Controller {
 
                 // Update the game
                 double deltaTimeSinceLast = (now - lastTime) * 1e-9;
-                // game.updateJellyfish(deltaTimeSinceLast);
                 game.updateGame(deltaTimeSinceLast);
 
+                // Restart the game if it is over
                 if (game.isGameOver()) {
                     game.restartGame();
                     stopAnimatingWindow();
@@ -97,7 +101,27 @@ public class Controller {
                 // Draw jellyfish
                 view.drawImage(img, game.jellyfish.getX() - game.window.getX(),
                         game.jellyfish.getY() - game.window.getY());
-                
+
+                // Draw the platforms
+                if (firstPlaformVerticalPosition != game.getPlatforms().peek().getY()) {
+
+                    ListIterator<Platform> platformIterator;
+                    if (game.isGameOver()) {
+                        platformIterator = game.getPlatforms().listIterator(0);
+                    } else {
+                        platformIterator = game.getPlatforms().listIterator(10);
+                    }
+
+                    while (platformIterator.hasNext()) {
+                        Platform platformToDraw = platformIterator.next();
+                        view.drawRectangle(platformToDraw.getX(), platformToDraw.getY(), platformToDraw.getWidth(),
+                                platformToDraw.getHeight(), platformToDraw.getColor());
+                    }
+
+                    // First platform vertical position
+                    firstPlaformVerticalPosition = game.getPlatforms().peek().getY();
+                }
+
                 // Set last time to current time
                 lastTime = now;
             }
@@ -179,9 +203,14 @@ public class Controller {
 
     public void toggleDebugMode() {
         inDebugMode = !inDebugMode;
-        
+
         if (inDebugMode) {
             stopAnimatingWindow();
+
+            // context.setFill(Color.BLACK);
+            // context.fillText("Utilisez les flèches pour déplacer la fenêtre", 5, 15);
+            // context.fillText("Origine de la fenêtre: (" + fenetreX + ", " + fenetreY +
+            // ")", 5, 30);
         } else {
             animateWindow();
         }

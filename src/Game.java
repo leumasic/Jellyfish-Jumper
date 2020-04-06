@@ -5,13 +5,14 @@ import components.*;
 
 public class Game {
 
-    private static int platformsInMemory = 15;
-    private static double platformsVerticalSpacing = 100;
+    private int numPlatforms = 15;
+    private double verticalSpaceBetweenPlatforms = 100;
 
     protected Window window;
     protected Jellyfish jellyfish;
     private ArrayList<Bubble> bubbles;
     private LinkedList<Platform> platforms;
+    
     private Boolean gameOver;
 
     private double width, height;
@@ -25,7 +26,7 @@ public class Game {
         this.height = height;
 
         // Set whether or not the game has started
-        this.gameOver = false;
+        this.gameOver = true;
 
         // Instantiate a jellyfish
         this.jellyfish = new Jellyfish(width / 2, height - 50, 50, 50);
@@ -35,7 +36,7 @@ public class Game {
         this.window = new Window(0, 0);
 
         // Instantiate platforms
-        platforms = getNPlatforms(platformsInMemory, height - platformsVerticalSpacing);
+        this.platforms = getNPlatforms(numPlatforms, height - verticalSpaceBetweenPlatforms);
     }
     public void restartGame() {
         // Set playing to false
@@ -59,6 +60,8 @@ public class Game {
         // If jellyfish is below the windows's vertical position, then game over
         if (jellyfish.getY() - window.getY() > height) {
             gameOver = true;
+        } else {
+            gameOver = false;
         }
 
         updateJellyfish(timeDelta);
@@ -68,14 +71,14 @@ public class Game {
         this.score = (long) Math.abs(window.getY());
     }
     public void updatePlatforms(int numPlatformsToVerify) {
-        if (numPlatformsToVerify > platformsInMemory) {
+        if (numPlatformsToVerify > numPlatforms) {
             throw new IllegalArgumentException("Number of platforms to verify greater than that in memory");
         }
 
         // Update the platforms after numPlatformsToVerify of them are below the window
-        if (platforms.peek().getY() - window.getY() > platformsVerticalSpacing * numPlatformsToVerify) {
+        if (platforms.peek().getY() - window.getY() > verticalSpaceBetweenPlatforms * numPlatformsToVerify) {
             removeNPlatforms(numPlatformsToVerify);
-            getNPlatforms(numPlatformsToVerify, platforms.getLast().getY());
+            getNPlatforms(numPlatformsToVerify, platforms.peekLast().getY());
         }
     }
     public void updateJellyfish(double timeDelta) {
@@ -83,7 +86,7 @@ public class Game {
         // If yes, set the jellyfish's vertical acceleration and velocity to 0
         /*
         for (Platform platform: platforms) {
-            
+
             if (true) {
                 jellyfishOnPlatform = true;
                 jellyfish.setY(Math.min(jellyfish.getY(), height - jellyfish.getHeight() / 2));
@@ -115,7 +118,7 @@ public class Game {
     public boolean isGameOver() {return gameOver;}
     public double getScore() {return score;}
     private void removeNPlatforms(int n) {
-        if (n > platformsInMemory) {
+        if (n > numPlatforms) {
             throw new IllegalArgumentException("Number of platforms to remove greater than that in memory");
         }
 
@@ -130,7 +133,7 @@ public class Game {
             double rand = Math.random();
             double platformWidth = 80.0 + (95.0 * rand);
             double platformX = rand * (width - platformWidth);
-            double platformY = startY + (i * platformsVerticalSpacing);
+            double platformY = startY + (i * verticalSpaceBetweenPlatforms);
 
             if (!lastAddedWasSolid) {
                 if (rand < 0.65) {
@@ -153,4 +156,8 @@ public class Game {
 
         return generatedPlatforms;
     }
+
+    public double getverticalSpaceBetweenPlatforms() { return verticalSpaceBetweenPlatforms;}
+    public int getNumPlatforms() {return numPlatforms;}
+    public LinkedList<Platform> getPlatforms() {return platforms;}
 }
