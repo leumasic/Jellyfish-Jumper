@@ -12,11 +12,8 @@ public class Controller {
 
     // Allows the controller to modify the view internally
     private View view;
-
-    private AnimationTimer windowTimer;
     private Game game;
     private boolean inDebugMode;
-    private boolean isWindowAnimating;
 
     public Controller(View view) {
         // Set view to modify
@@ -52,21 +49,29 @@ public class Controller {
                         false),
                 new Image("/assets/jellyfish6.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false,
                         false) };
-    }
 
-    public void startGame() {
         inDebugMode = false;
 
         // Start animating the jellyfish
-        animateGame();
-    }
+        animateJellyfish();
 
-    private void animateGame() {
+        // Start animating the platforms
+        animatePlatforms();
+
+        // Start animating the game
+        animateGame();
+
+        // Start animating the window
+        // animateWindow();
+    }
+    public void startGame() {
+        this.game.startWindow();
+    }
+    private void animateJellyfish() {
         double frameRate = 8 * 1e-9;
         AnimationTimer timer = new AnimationTimer() {
             private long startTime = 0;
             private long lastTime = 0;
-            private double firstPlaformVerticalPosition = -50;
 
             @Override
             public void handle(long now) {
@@ -76,15 +81,8 @@ public class Controller {
                     return;
                 }
 
-                // Update the game
                 double deltaTimeSinceLast = (now - lastTime) * 1e-9;
-                game.updateGame(deltaTimeSinceLast);
-
-                // Restart the game if it is over
-                if (game.isGameOver()) {
-                    game.restartGame();
-                    stopAnimatingWindow();
-                }
+                game.updateJellyfish(deltaTimeSinceLast);
 
                 // Update the jellyfish's frame (orientation)
                 double deltaTimeSinceStart = (now - startTime);
@@ -102,6 +100,17 @@ public class Controller {
                 view.drawImage(img, game.jellyfish.getX() - game.window.getX(),
                         game.jellyfish.getY() - game.window.getY());
 
+                lastTime = now;
+            }
+        };
+        timer.start();
+    }
+    private void animatePlatforms() {
+        AnimationTimer timer = new AnimationTimer() {
+            private double firstPlaformVerticalPosition = -50;
+
+            @Override
+            public void handle(long now) {
                 // Draw the platforms
                 if (firstPlaformVerticalPosition != game.getPlatforms().peek().getY()) {
 
@@ -116,17 +125,41 @@ public class Controller {
 
                     // First platform vertical position
                     firstPlaformVerticalPosition = game.getPlatforms().peek().getY();
+
+                    game.updatePlatforms(5);
+                }
+            }
+        };
+        timer.start();
+    }
+    private void animateGame() {
+        AnimationTimer timer = new AnimationTimer(){
+            private long lastTime = 0;
+
+            @Override
+            public void handle(long now) {
+                if (lastTime == 0) {
+                    lastTime = now;
+                    return;
                 }
 
-                // Set last time to current time
+                // Update the game
+                double deltaTime = (now - lastTime) * 1e-9;
+                game.updateGame(deltaTime);
+
+                // Restart the game if it is over
+                if (game.isGameOver()) {
+                    game.restartGame();
+                }
+
+                // Set lastTime to now
                 lastTime = now;
             }
         };
         timer.start();
     }
-
     private void animateWindow() {
-        windowTimer = new AnimationTimer() {
+        AnimationTimer windowTimer = new AnimationTimer() {
             private long lastTime = 0;
 
             @Override
@@ -145,25 +178,12 @@ public class Controller {
 
         windowTimer.start();
     }
-
-    private void stopAnimatingWindow() {
-        windowTimer.stop();
-    }
-
     public void resumeGame() {
         animateWindow();
     }
-
-    public void stopGame() {
-        stopAnimatingWindow();
-    }
-
     public void handleKeyLeft() {
-        if (game.isGameOver())
-            startGame();
-
-        if (!inDebugMode && !isWindowAnimating) {
-            animateWindow();
+        if (!inDebugMode) {
+            this.game.setGamePlaying(true);
         }
 
         if (game.jellyfish.getOrientation() != Orientation.LEFT)
@@ -173,11 +193,8 @@ public class Controller {
     }
 
     public void handleKeyRight() {
-        if (game.isGameOver())
-            startGame();
-
-        if (!inDebugMode && !isWindowAnimating) {
-            animateWindow();
+        if (!inDebugMode) {
+            this.game.setGamePlaying(true);
         }
 
         if (game.jellyfish.getOrientation() != Orientation.RIGHT)
@@ -187,13 +204,10 @@ public class Controller {
     }
 
     public void handleKeyUp() {
-        if (game.isGameOver())
-            startGame();
-
-        if (!inDebugMode && !isWindowAnimating) {
-            animateWindow();
+        if (!inDebugMode) {
+            this.game.setGamePlaying(true);
         }
-
+        
         game.jellyfishJump();
     }
 
@@ -201,12 +215,11 @@ public class Controller {
         inDebugMode = !inDebugMode;
 
         if (inDebugMode) {
-            stopAnimatingWindow();
-
             // context.setFill(Color.BLACK);
             // context.fillText("Utilisez les flèches pour déplacer la fenêtre", 5, 15);
             // context.fillText("Origine de la fenêtre: (" + fenetreX + ", " + fenetreY +
             // ")", 5, 30);
+            game.stopWindow();
         } else {
             animateWindow();
         }

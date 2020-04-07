@@ -50,8 +50,6 @@ public class View extends Application {
         root.getChildren().add(imageCanvas);
         imageContext = imageCanvas.getGraphicsContext2D();
 
-        controller.startGame();
-        
         scene.setOnKeyPressed((e) -> {
             switch (e.getCode()) {
                 case LEFT:
@@ -83,7 +81,7 @@ public class View extends Application {
         primaryStage.show();
     }
     public void drawImage(Image img, double xPosition, double yPosition) {
-        imageContext.clearRect(xPosition - 10, yPosition - 10, WIDTH, HEIGHT);
+        imageContext.clearRect(xPosition - 30, yPosition - 30, WIDTH, HEIGHT);
         imageContext.drawImage(img, xPosition, yPosition);
     }
     public void drawRectangle(double xPosition, double yPosition, double width, double height, Color color) {
