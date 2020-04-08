@@ -81,7 +81,7 @@ public class View extends Application {
         primaryStage.show();
     }
     public void drawImage(Image img, double xPosition, double yPosition) {
-        imageContext.clearRect(xPosition - 30, yPosition - 30, WIDTH, HEIGHT);
+        imageContext.clearRect(xPosition - 50, yPosition - 100, WIDTH, HEIGHT);
         imageContext.drawImage(img, xPosition, yPosition);
     }
     public void drawRectangle(double xPosition, double yPosition, double width, double height, Color color) {
