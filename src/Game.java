@@ -7,6 +7,7 @@ public class Game {
 
     private int numPlatforms = 15;
     private double verticalSpaceBetweenPlatforms = 100;
+    private int numPlatformsToUpdate = 5;
 
     protected Window window;
     protected Jellyfish jellyfish;
@@ -78,22 +79,22 @@ public class Game {
         }
 
         updateJellyfish(timeDelta);
-        updatePlatforms(5);
+        updatePlatforms();
     }
 
     public void updateScore() {
         this.score = (long) Math.abs(window.getY());
     }
 
-    public void updatePlatforms(int numPlatformsToVerify) {
-        if (numPlatformsToVerify > numPlatforms) {
+    public void updatePlatforms() {
+        if (numPlatformsToUpdate > numPlatforms) {
             throw new IllegalArgumentException("Number of platforms to verify greater than that in memory");
         }
 
         // Update the platforms after numPlatformsToVerify of them are below the window
-        if (platforms.peek().getY() - window.getY() > verticalSpaceBetweenPlatforms * numPlatformsToVerify) {
-            removeFirstPlaforms(numPlatformsToVerify);
-            getNPlatforms(numPlatformsToVerify, platforms.peekLast().getY());
+        if (platforms.peek().getY() - window.getY() > verticalSpaceBetweenPlatforms * numPlatformsToUpdate) {
+            removeFirstPlatforms(numPlatformsToUpdate);
+            getNPlatforms(numPlatformsToUpdate, platforms.peekLast().getY());
         }
     }
 
@@ -149,7 +150,7 @@ public class Game {
         return score;
     }
 
-    private void removeFirstPlaforms(int n) {
+    private void removeFirstPlatforms(int n) {
         if (n > numPlatforms) {
             throw new IllegalArgumentException("Number of platforms to remove greater than that in memory");
         }
