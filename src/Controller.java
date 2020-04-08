@@ -1,5 +1,3 @@
-import java.util.ListIterator;
-
 import components.Platform;
 import components.Jellyfish.Orientation;
 import javafx.animation.AnimationTimer;

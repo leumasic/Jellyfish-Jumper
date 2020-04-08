@@ -6,13 +6,6 @@
     "configurations": [
         {
             "type": "java",
-            "name": "CodeLens (Launch) - HighSeaTower",
-            "request": "launch",
-            "mainClass": "HighSeaTower",
-            "projectName": "TP2"
-        },
-        {
-            "type": "java",
             "name": "CodeLens (Launch) - View",
             "request": "launch",
             "mainClass": "View",
