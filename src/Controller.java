@@ -64,9 +64,11 @@ public class Controller {
         // Start animating the window
         // animateWindow();
     }
+
     public void startGame() {
         this.game.startWindow();
     }
+
     private void animateJellyfish() {
         double frameRate = 8 * 1e-9;
         AnimationTimer timer = new AnimationTimer() {
@@ -105,36 +107,33 @@ public class Controller {
         };
         timer.start();
     }
+
     private void animatePlatforms() {
         AnimationTimer timer = new AnimationTimer() {
-            private double firstPlaformVerticalPosition = -50;
 
             @Override
             public void handle(long now) {
 
+                // Update the platforms
                 game.updatePlatforms();
 
-                // Draw the platforms
-                if (firstPlaformVerticalPosition != game.getPlatforms().peek().getY()) {
+                // Remove (undraw) the platforms below the first one
+                Platform lastPlatform = game.getPlatforms().peek();
+                view.removeRectangle(lastPlatform.getX(), lastPlatform.getY() + lastPlatform.getHeight(),
+                        view.getWidth(), Math.abs(lastPlatform.getY()));
 
-                    ListIterator<Platform> platformIterator;
-                    platformIterator = game.getPlatforms().listIterator(0);
-
-                    while (platformIterator.hasNext()) {
-                        Platform platformToDraw = platformIterator.next();
-                        view.drawRectangle(platformToDraw.getX(), platformToDraw.getY(), platformToDraw.getWidth(),
-                                platformToDraw.getHeight(), platformToDraw.getColor());
-                    }
-
-                    // First platform vertical position
-                    firstPlaformVerticalPosition = game.getPlatforms().peek().getY();
+                // Draw every other platform
+                for (Platform platform : game.getPlatforms()) {
+                    view.drawRectangle(platform.getX(), platform.getY(), platform.getWidth(), platform.getHeight(),
+                            platform.getColor());
                 }
             }
         };
         timer.start();
     }
+
     private void animateGame() {
-        AnimationTimer timer = new AnimationTimer(){
+        AnimationTimer timer = new AnimationTimer() {
             private long lastTime = 0;
 
             @Override
@@ -148,17 +147,13 @@ public class Controller {
                 double deltaTime = (now - lastTime) * 1e-9;
                 game.updateGame(deltaTime);
 
-                // Restart the game if it is over
-                if (game.isGameOver()) {
-                    game.restartGame();
-                }
-
                 // Set lastTime to now
                 lastTime = now;
             }
         };
         timer.start();
     }
+
     private void animateWindow() {
         AnimationTimer windowTimer = new AnimationTimer() {
             private long lastTime = 0;
@@ -173,15 +168,18 @@ public class Controller {
                 double timeDelta = (now - lastTime) * 1e-9;
                 game.updateWindow(timeDelta);
 
+                // Set lastTime to now
                 lastTime = now;
             }
         };
 
         windowTimer.start();
     }
+
     public void resumeGame() {
         animateWindow();
     }
+
     public void handleKeyLeft() {
 
         if (game.jellyfish.getOrientation() != Orientation.LEFT)
@@ -199,7 +197,7 @@ public class Controller {
     }
 
     public void handleKeyUp() {
-        
+
         game.jellyfishJump();
     }
 

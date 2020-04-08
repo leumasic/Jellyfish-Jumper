@@ -88,6 +88,9 @@ public class View extends Application {
         rectanglesContext.setFill(color);
         rectanglesContext.fillRect(xPosition, yPosition, width, height);        
     }
+    public void removeRectangle(double xPosition, double yPosition, double width, double height) {
+        rectanglesContext.clearRect(xPosition, yPosition, width, height);
+    }
     public double getWidth() {return WIDTH;}
     public double getHeight() {return HEIGHT;}
 }

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import components.*;
@@ -14,20 +15,19 @@ public class Game {
     private ArrayList<Bubble> bubbles;
     private LinkedList<Platform> platforms;
 
-    private boolean gameOver;
-
     private double width, height;
     private long score;
     private boolean jellyfishOnPlatform;
 
     public Game(double width, double height) {
+        
+        if (numPlatformsToUpdate > numPlatforms) {
+            throw new IllegalArgumentException("Number of platforms to verify greater than that in memory");
+        }
 
         // Set the bounds of the game
         this.width = width;
         this.height = height;
-
-        // Set whether or not the game has started
-        this.gameOver = false;
 
         // Instantiate a jellyfish
         this.jellyfish = new Jellyfish(width / 2, height - 50, 50, 50);
@@ -36,7 +36,8 @@ public class Game {
         // Instantiate window
         this.window = new Window(0, 0);
 
-        // Instantiate platforms except that the first must be 
+        // Instantiate platforms except that the first must be right below
+        // the jellyfish's initial position
         this.platforms = new LinkedList<Platform>();
         this.platforms.add(new SimplePlatform(0, height, width, 10));
         addNPlatforms(numPlatforms, height - verticalSpaceBetweenPlatforms);
@@ -52,10 +53,7 @@ public class Game {
         this.window.setVerticalVelocity(0);
     }
 
-    public void restartGame() {
-        // Set playing to false
-        this.gameOver = false;
-
+    private void restartGame() {
         // Make the jellyfish immobile
         this.jellyfish.setHorizontalAcceleration(0);
         this.jellyfish.setHorizontalVelocity(0);
@@ -71,10 +69,15 @@ public class Game {
         this.window.setY(0);
     }
 
+    /**
+     * Vérifie si la méduse est en dessous de la fenêtre; auquel cas
+     * le jeu recommence
+     * @param timeDelta
+     */
     public void updateGame(double timeDelta) {
         // If jellyfish is below the windows's vertical position, then game over
         if (jellyfish.getY() - window.getY() > height) {
-            gameOver = true;
+            restartGame();
             System.out.println("Game restarted!");
         }
     }
@@ -83,15 +86,19 @@ public class Game {
         this.score = (long) Math.abs(window.getY());
     }
 
+    /**
+     * Méthode qui enlève les plateformes en-dessous de la fenêtre
+     */
     public void updatePlatforms() {
-        if (numPlatformsToUpdate > numPlatforms) {
-            throw new IllegalArgumentException("Number of platforms to verify greater than that in memory");
-        }
+        Iterator<Platform> platformIterator = platforms.iterator();
 
-        // Update the platforms after numPlatformsToVerify of them are below the window
-        if (platforms.peek().getY() - window.getY() > verticalSpaceBetweenPlatforms * numPlatformsToUpdate) {
-            removeFirstPlatforms(numPlatformsToUpdate);
-            addNPlatforms(numPlatformsToUpdate, platforms.peekLast().getY());
+        while (platformIterator.hasNext()) {
+            if (platformIterator.next().getY() - height > window.getY()) {
+                platforms.poll();
+                addNPlatforms(1, platforms.peekLast().getY());
+            } else {
+                break;
+            }
         }
     }
 
@@ -120,7 +127,6 @@ public class Game {
         } else {
             jellyfish.setVerticalAcceleration(1200);
         }
-
     }
 
     public void updateWindow(double timeDelta) {
@@ -139,16 +145,13 @@ public class Game {
         }
     }
 
-    public boolean isGameOver() {
-        return gameOver;
-    }
-
     public double getScore() {
         return score;
     }
 
     /**
-     * Méthode qui enlève N plateformes à l'attribut "platforms"
+     * Méthode qui enlève N plateformes à la tête de
+     * l'attribut "platforms"
      * @param n
      */
     private void removeFirstPlatforms(int n) {
@@ -218,8 +221,12 @@ public class Game {
     public int getNumPlatforms() {
         return numPlatforms;
     }
+    public int getNumPlatformsToUpdate() {
+        return numPlatformsToUpdate;
+    }
 
     public LinkedList<Platform> getPlatforms() {
         return platforms;
     }
+
 }
