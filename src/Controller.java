@@ -111,6 +111,9 @@ public class Controller {
 
             @Override
             public void handle(long now) {
+
+                game.updatePlatforms();
+
                 // Draw the platforms
                 if (firstPlaformVerticalPosition != game.getPlatforms().peek().getY()) {
 
@@ -125,8 +128,6 @@ public class Controller {
 
                     // First platform vertical position
                     firstPlaformVerticalPosition = game.getPlatforms().peek().getY();
-
-                    game.updatePlatforms(5);
                 }
             }
         };

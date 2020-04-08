@@ -39,7 +39,7 @@ public class Game {
         // Instantiate platforms except that the first must be 
         this.platforms = new LinkedList<Platform>();
         this.platforms.add(new SimplePlatform(0, height, width, 10));
-        this.platforms.addAll(getNPlatforms(numPlatforms, height - verticalSpaceBetweenPlatforms));
+        addNPlatforms(numPlatforms, height - verticalSpaceBetweenPlatforms);
     }
 
     public void startWindow() {
@@ -77,9 +77,6 @@ public class Game {
             gameOver = true;
             System.out.println("Game restarted!");
         }
-
-        updateJellyfish(timeDelta);
-        updatePlatforms();
     }
 
     public void updateScore() {
@@ -94,7 +91,7 @@ public class Game {
         // Update the platforms after numPlatformsToVerify of them are below the window
         if (platforms.peek().getY() - window.getY() > verticalSpaceBetweenPlatforms * numPlatformsToUpdate) {
             removeFirstPlatforms(numPlatformsToUpdate);
-            getNPlatforms(numPlatformsToUpdate, platforms.peekLast().getY());
+            addNPlatforms(numPlatformsToUpdate, platforms.peekLast().getY());
         }
     }
 
@@ -150,6 +147,10 @@ public class Game {
         return score;
     }
 
+    /**
+     * Méthode qui enlève N plateformes à l'attribut "platforms"
+     * @param n
+     */
     private void removeFirstPlatforms(int n) {
         if (n > numPlatforms) {
             throw new IllegalArgumentException("Number of platforms to remove greater than that in memory");
@@ -160,19 +161,34 @@ public class Game {
         }
     }
 
-    private LinkedList<Platform> getNPlatforms(int n, double startY) {
-        LinkedList<Platform> generatedPlatforms = new LinkedList<Platform>();
+    /**
+     * Méthode qui ajoute n plateformes à l'attribut "platforms" qui sont verticalement espacés de 
+     * la propriété verticalSpaceBetweenPlatforms, commençant à la position startY
+     * @param n
+     * @param startY
+     */
+    private void addNPlatforms(int n, double startY) {
+        
+        // Une variable pour garder en mémoire le type de la dernière plateforme
         boolean lastAddedWasSolid = false;
 
         for (int i = 0; i < n; i++) {
             Platform platformToAdd;
 
+            // Nombre aléatoire entre 0 et 1
             double rand = Math.random();
-            double platformWidth = 80.0 + (95.0 * rand);
-            double platformX = rand * (width - platformWidth);
-            double platformY = startY + (-i * verticalSpaceBetweenPlatforms);
 
+            // Largeur de la plateforme aléatoire, entre 80 et 175
+            double platformWidth = 80.0 + (95.0 * rand);
+
+            // Position X de la plateforme aléatoire mais dépendante de sa largeur 
+            double platformX = rand * (width - platformWidth);
+
+            // Position Y de la plateforme aléatoire, au dessus de la dernière plateforme
+            double platformY = startY + (-i * verticalSpaceBetweenPlatforms);
+            
             if (!lastAddedWasSolid) {
+                // Type de plateforme déterminée aléatoirement (selon les consignes)
                 if (rand < 0.65) {
                     platformToAdd = new SimplePlatform(platformX, platformY, platformWidth, 10);
                 } else if (rand >= 0.65 && rand < 0.85) {
@@ -184,14 +200,15 @@ public class Game {
                     lastAddedWasSolid = true;
                 }
             } else {
+                // Type de plateforme ne peut pas être solide puisque la dernière l'était:
+                // Nous avons décidé que la prochaine serait une plateforme simple
                 platformToAdd = new SimplePlatform(platformX, platformY, platformWidth, 10);
                 lastAddedWasSolid = false;
             }
 
-            generatedPlatforms.add(platformToAdd);
+            // Ajouter la plateforme à l'ensemble des plateformes
+            platforms.add(platformToAdd);
         }
-
-        return generatedPlatforms;
     }
 
     public double getverticalSpaceBetweenPlatforms() {
