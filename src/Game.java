@@ -14,7 +14,6 @@ public class Game {
     private LinkedList<Platform> platforms;
 
     private boolean gameOver;
-    private boolean playing;
 
     private double width, height;
     private long score;
@@ -36,8 +35,10 @@ public class Game {
         // Instantiate window
         this.window = new Window(0, 0);
 
-        // Instantiate platforms
-        this.platforms = getNPlatforms(numPlatforms, height - verticalSpaceBetweenPlatforms);
+        // Instantiate platforms except that the first must be 
+        this.platforms = new LinkedList<Platform>();
+        this.platforms.add(new SimplePlatform(0, height, width, 10));
+        this.platforms.addAll(getNPlatforms(numPlatforms, height - verticalSpaceBetweenPlatforms));
     }
 
     public void startWindow() {
@@ -97,64 +98,31 @@ public class Game {
     }
 
     public void updateJellyfish(double timeDelta) {
-        // Loop through all NEARBY `platforms and check whether the jellyfish is on any
-        // of them
-        // If yes, set the jellyfish's vertical acceleration and velocity to 0
 
-        if (playing) {
-            for (Platform platform : platforms) {
+        jellyfish.update(timeDelta, width);
 
-                // if (jellyfish.getVerticalVelocity() > 0) {
-                // jellyfishOnPlatform = false;
-    
-                // // If the jellyfish's feet are below half of one of the platforms, then it is
-                // on
-                // // one.
-                // // Replace the jellyfish above the platform, if so.
-                // if (jellyfish.getY() + jellyfish.getHeight() <= platform.getY() +
-                // platform.getHeight()
-                // && jellyfish.getY() + jellyfish.getHeight() >= platform.getY()) {
-                // if (jellyfish.getX() >= platform.getX()
-                // && jellyfish.getX() <= platform.getX() + platform.getWidth()) {
-                // System.out.println("Jelly on platform!");
-                // jellyfishOnPlatform = true;
-                // break;
-                // }
-                // }
-                // }
-    
-                if (jellyfish.getY() + jellyfish.getHeight() <= platform.getY() + platform.getHeight()
-                        && jellyfish.getY() + jellyfish.getHeight() >= platform.getY()
-                        && jellyfish.getX() >= platform.getX()
-                        && jellyfish.getX() <= platform.getX() + platform.getWidth()
-                        && jellyfish.getVerticalVelocity() <= 0
-                        ) {
-    
-                    System.out.println("Jelly on platform!");
-                    jellyfishOnPlatform = true;
-                    break;
-                } else {
-                    jellyfishOnPlatform = false;
-                }
-                /*
-                if ( || jellyfish.getVerticalVelocity() > 0) {
-                    jellyfishOnPlatform = false;
-                    break;
-                } else {
-                    jellyfishOnPlatform = true;
-                }
-                */
-    
-                if (jellyfishOnPlatform) {
-                    jellyfish.setVerticalAcceleration(0);
-                    jellyfish.setVerticalVelocity(0);
-                } else {
-                    jellyfish.setVerticalAcceleration(1200);
-                }
+        for (Platform platform : platforms) {
+
+            if (jellyfish.getY() + jellyfish.getHeight() <= platform.getY() + platform.getHeight()
+                    && jellyfish.getY() + jellyfish.getHeight() >= platform.getY()
+                    && jellyfish.getX() >= platform.getX() && jellyfish.getX() <= platform.getX() + platform.getWidth()
+                    && jellyfish.getVerticalVelocity() <= 0) {
+
+                System.out.println("Jelly on platform!");
+                jellyfishOnPlatform = true;
+                break;
+            } else {
+                jellyfishOnPlatform = false;
             }
         }
 
-        jellyfish.update(timeDelta, width);
+        if (jellyfishOnPlatform) {
+            jellyfish.setVerticalAcceleration(0);
+            jellyfish.setVerticalVelocity(0);
+        } else {
+            jellyfish.setVerticalAcceleration(1200);
+        }
+
     }
 
     public void updateWindow(double timeDelta) {
@@ -176,8 +144,7 @@ public class Game {
     public boolean isGameOver() {
         return gameOver;
     }
-    public boolean isGamePlaying() {return playing;}
-    public void setGamePlaying(boolean isGamePlaying) {this.playing = isGamePlaying;} 
+
     public double getScore() {
         return score;
     }

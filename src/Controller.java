@@ -182,9 +182,6 @@ public class Controller {
         animateWindow();
     }
     public void handleKeyLeft() {
-        if (!inDebugMode) {
-            this.game.setGamePlaying(true);
-        }
 
         if (game.jellyfish.getOrientation() != Orientation.LEFT)
             game.jellyfish.setOrientation(Orientation.LEFT);
@@ -193,9 +190,6 @@ public class Controller {
     }
 
     public void handleKeyRight() {
-        if (!inDebugMode) {
-            this.game.setGamePlaying(true);
-        }
 
         if (game.jellyfish.getOrientation() != Orientation.RIGHT)
             game.jellyfish.setOrientation(Orientation.RIGHT);
@@ -204,9 +198,6 @@ public class Controller {
     }
 
     public void handleKeyUp() {
-        if (!inDebugMode) {
-            this.game.setGamePlaying(true);
-        }
         
         game.jellyfishJump();
     }
