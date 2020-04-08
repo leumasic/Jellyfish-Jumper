@@ -20,7 +20,7 @@ public class Game {
     private boolean jellyfishOnPlatform;
 
     public Game(double width, double height) {
-        
+
         if (numPlatformsToUpdate > numPlatforms) {
             throw new IllegalArgumentException("Number of platforms to verify greater than that in memory");
         }
@@ -112,8 +112,9 @@ public class Game {
                     && jellyfish.getY() + jellyfish.getHeight() >= platform.getY()
                     && jellyfish.getX() >= platform.getX() && jellyfish.getX() <= platform.getX() + platform.getWidth()
                     && jellyfish.getVerticalVelocity() <= 0) {
-
-                System.out.println("Jelly on platform!");
+                
+                System.out.println(jellyfish.getX() + ", " + platform.getX());
+                // System.out.println("Jelly on platform!");
                 jellyfishOnPlatform = true;
                 break;
             } else {
