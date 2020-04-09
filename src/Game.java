@@ -24,6 +24,8 @@ public class Game {
     private long score;
     private boolean jellyfishOnPlatform;
 
+    private double windowSpeed;
+
     public Game(double width, double height) {
 
         // Verifies whether or not the number of platforms to update is greater than the number of platforms
@@ -150,10 +152,19 @@ public class Game {
     }
 
     /**
-     * Updates the position of the window
+     * Updates the position of the window.
+     * 
      * @param timeDelta
      */
     public void updateWindow(double timeDelta) {
+
+        if (jellyfish.getY() < window.getY() + height / 4) {
+
+            System.out.println("Jellyfish above 3/4 of the window");
+        } else {
+            windowSpeed = window.getVerticalVelocity();
+        }
+
         window.update(timeDelta);
     }
 

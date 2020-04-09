@@ -65,6 +65,10 @@ public class Controller {
         // Start animating the score
         animateScore();
     }
+
+    /**
+     * Method that animates the score
+     */
     private void animateScore() {
         AnimationTimer timer = new AnimationTimer() {
 
@@ -83,6 +87,10 @@ public class Controller {
         };
         timer.start();
     }
+
+    /**
+     * Method that animates the jellyfish
+     */
     private void animateJellyfish() {
         double frameRate = 8 * 1e-9;
         AnimationTimer timer = new AnimationTimer() {
@@ -97,6 +105,7 @@ public class Controller {
                     return;
                 }
 
+                // Update the jellyfish's position
                 double deltaTimeSinceLast = (now - lastTime) * 1e-9;
                 game.updateJellyfish(deltaTimeSinceLast);
 
@@ -106,6 +115,7 @@ public class Controller {
 
                 Image img;
 
+                // Choose the frame to draw based on the jellyfish's orientation
                 if (game.jellyfish.getOrientation() == Orientation.LEFT) {
                     img = leftFacingJellyfishFrames[frame % leftFacingJellyfishFrames.length];
                 } else {
@@ -122,6 +132,9 @@ public class Controller {
         timer.start();
     }
 
+    /**
+     * Method that animates the platforms
+     */
     private void animatePlatforms() {
         AnimationTimer timer = new AnimationTimer() {
 
@@ -142,10 +155,13 @@ public class Controller {
                 }
             }
         };
-        
+
         timer.start();
     }
 
+    /**
+     * Method that animates the game
+     */
     private void animateGame() {
         AnimationTimer timer = new AnimationTimer() {
             private long lastTime = 0;
@@ -168,6 +184,9 @@ public class Controller {
         timer.start();
     }
 
+    /**
+     * Method that animates the window
+     */
     private void animateWindow() {
         AnimationTimer windowTimer = new AnimationTimer() {
             private long lastTime = 0;
@@ -190,39 +209,62 @@ public class Controller {
         windowTimer.start();
     }
 
+    /**
+     * Event on left-key press
+     */
     public void handleKeyLeft() {
+        
+        // Start moving the window and start the game if it hasn't started
         if (!game.hasGameStarted()) {
             game.startWindow();
             game.setGameStarted(true);
         }
 
+        // Make the jellyfish face left
         if (game.jellyfish.getOrientation() != Orientation.LEFT)
             game.jellyfish.setOrientation(Orientation.LEFT);
 
+        // Move the jellyfish to the left
         game.jellyfish.moveLeft();
     }
 
+    /**
+     * Event on right key press
+     */
     public void handleKeyRight() {
+
+        // Start moving the window and start the game if it hasn't started
         if (!game.hasGameStarted()) {
             game.startWindow();
             game.setGameStarted(true);
         }
 
+        // Make the jellyfish face right
         if (game.jellyfish.getOrientation() != Orientation.RIGHT)
             game.jellyfish.setOrientation(Orientation.RIGHT);
 
+        // Move the jellyfish to the right
         game.jellyfish.moveRight();
     }
 
+    /**
+     * Event on key up/space bar press
+     */
     public void handleKeyUp() {
+
+        // Start moving the window and start the game if it hasn't started
         if (!game.hasGameStarted()) {
             game.startWindow();
             game.setGameStarted(true);
         }
 
+        // Make the jellyfish jump
         game.jellyfishJump();
     }
 
+    /**
+     * Toggles the debug mode
+     */
     public void toggleDebugMode() {
         inDebugMode = !inDebugMode;
 
@@ -237,6 +279,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Stops the horizontal movement of the jellyfish
+     */
     public void stopJellyfish() {
         game.jellyfish.setHorizontalAcceleration(0.0);
         game.jellyfish.setHorizontalVelocity(0.0);

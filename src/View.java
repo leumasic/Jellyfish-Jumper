@@ -151,7 +151,7 @@ public class View extends Application {
      */
     public void drawText(String text, double xPosition, double yPosition) {
         scoreContext.setFill(Color.WHITE);
-        scoreContext.setFont(Font.font("Purisa", 28));
+        scoreContext.setFont(Font.font(28));
         scoreContext.fillText(text, xPosition, yPosition);
     }
 
