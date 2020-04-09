@@ -61,8 +61,28 @@ public class Controller {
 
         // Start animating the window
         animateWindow();
-    }
 
+        // Start animating the score
+        animateScore();
+    }
+    private void animateScore() {
+        AnimationTimer timer = new AnimationTimer() {
+
+            @Override
+            public void handle(long now) {
+                
+                // Update the game's score
+                game.updateScore();
+
+                // Clear the score from the canvas
+                view.clearText(0, 0, view.getWidth(), view.getHeight());
+
+                // Draw the score
+                view.drawText(Long.toString(game.getScore()) + "m", view.getWidth() / 2, 35);
+            }   
+        };
+        timer.start();
+    }
     private void animateJellyfish() {
         double frameRate = 8 * 1e-9;
         AnimationTimer timer = new AnimationTimer() {
@@ -112,9 +132,8 @@ public class Controller {
                 game.updatePlatforms();
 
                 // Remove (undraw) the platforms
-                Platform lastPlatform = game.getPlatforms().peekLast();
-                view.removeRectangle(0, game.window.getY(),
-                        view.getWidth(), Math.abs(game.window.getY()) + 480);
+                view.clearRectangle(0, game.window.getY(),
+                        view.getWidth(), Math.abs(game.window.getY()) + view.getHeight());
 
                 // Draw every other platform
                 for (Platform platform : game.getPlatforms()) {
@@ -123,6 +142,7 @@ public class Controller {
                 }
             }
         };
+        
         timer.start();
     }
 

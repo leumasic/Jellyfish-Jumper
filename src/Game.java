@@ -1,14 +1,17 @@
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import components.*;
 
 public class Game {
 
+    // Nombre de plateformes gardées en mémoire (choisie comme bon vous semble)
     private int numPlatforms = 15;
+    
+    // Nombre de plateformes à mettre updater
+    private int numPlatformsToUpdate = 2;
+
     private double verticalSpaceBetweenPlatforms = 100;
-    private int numPlatformsToUpdate = 5;
 
     protected Window window;
     protected Jellyfish jellyfish;
@@ -23,6 +26,7 @@ public class Game {
 
     public Game(double width, double height) {
 
+        // Verifies whether or not the number of platforms to update is greater than the number of platforms
         if (numPlatformsToUpdate > numPlatforms) {
             throw new IllegalArgumentException("Number of platforms to verify greater than that in memory");
         }
@@ -48,17 +52,29 @@ public class Game {
         this.gameStarted = false;
     }
 
+    /**
+     * Starts moving the window upward at:
+     * -> A speed of 50px/s
+     * -> An acceleration of 2px/s squared
+     */
     public void startWindow() {
         this.window.setVerticalAcceleration(-2);
         this.window.setVerticalVelocity(-50);
     }
 
+    /**
+     * Stops the window from moving
+     */
     public void stopWindow() {
         this.window.setVerticalAcceleration(0);
         this.window.setVerticalVelocity(0);
     }
 
+    /**
+     * Method that restarts the game
+     */
     private void restartGame() {
+
         // Make the jellyfish immobile
         this.jellyfish.setHorizontalAcceleration(0);
         this.jellyfish.setHorizontalVelocity(0);
@@ -67,13 +83,12 @@ public class Game {
         // Stop the window from moving
         this.stopWindow();
 
-        // Set the window's position
+        // Set the window's position back to 0
         this.window.setY(0);
 
         // Set the jellyfish to initial position
         this.jellyfish.setX(width / 2);
-        this.jellyfish.setY(height - 50);
-        this.jellyfishOnPlatform = true;
+        this.jellyfish.setY(height - jellyfish.getHeight());
 
         // Renew the platforms
         this.platforms = new LinkedList<Platform>();
@@ -97,12 +112,19 @@ public class Game {
         }
     }
 
+    /**
+     * Updates the score by casting the window's height (double) into a long
+     */
     public void updateScore() {
         this.score = (long) Math.abs(window.getY());
     }
 
     /**
-     * Méthode qui enlève les plateformes en-dessous de la fenêtre
+     * Méthode qui enlève les plateformes en-dessous de la fenêtre s'il y en a
+     * numPlatformsToUpdate en dessous d'elle.
+     * 
+     * Elle ajoute "numPlatformsToUpdate" plateformes s'il y a des plateformes
+     * enlevées
      */
     public void updatePlatforms() {
         // Update the platforms after numPlatformsToVerify of them are below the window
@@ -112,6 +134,10 @@ public class Game {
         }
     }
 
+    /**
+     * Updates the position of the jellyfish
+     * @param timeDelta
+     */
     public void updateJellyfish(double timeDelta) {
 
         jellyfishOnPlatform = false;
@@ -121,26 +147,32 @@ public class Game {
         }
 
         jellyfish.update(timeDelta, width);
-        System.out.println(jellyfishOnPlatform);
     }
 
+    /**
+     * Updates the position of the window
+     * @param timeDelta
+     */
     public void updateWindow(double timeDelta) {
         window.update(timeDelta);
     }
 
+    /**
+     * TODO -> Updates the bubbles
+     * @param timeDelta
+     */
     public void updateBubbles(double timeDelta) {
         // Show bubbles if % 5 seconds
 
     }
 
+    /**
+     * Makes the jellyfish jump if it is on a platform
+     */
     public void jellyfishJump() {
         if (jellyfishOnPlatform) {
             jellyfish.jump();
         }
-    }
-
-    public double getScore() {
-        return score;
     }
 
     /**
@@ -210,6 +242,10 @@ public class Game {
         }
     }
 
+    /**
+     * Method that tests if the jellyfish collides against a platform
+     * @param other
+     */
     public void testCollision(Platform other) {
         /**
          * La collision avec une plateforme a lieu seulement si :
@@ -223,12 +259,49 @@ public class Game {
          */
         if (intersects(other) && Math.abs(jellyfish.getY() + jellyfish.getHeight() - other.getY()) < 10
                 && jellyfish.getVerticalVelocity() > 0) {
-            pushOut(other);
-            jellyfish.setVerticalVelocity(0);
-            jellyfishOnPlatform = true;
+            
+            /**
+             * 
+             */
+            if (other instanceof AcceleratingPlatform) {
+                window.setVerticalVelocity(window.getVerticalVelocity() * 1.05);
+                pushOut(other);
+                jellyfish.setVerticalVelocity(0);
+                jellyfishOnPlatform = true;
+            } else if (other instanceof BouncyPlatform) {
+                jellyfish.setVerticalVelocity(Math.min(-100,jellyfish.getVerticalVelocity() * - 1.5));
+            } else {
+                pushOut(other);
+                jellyfish.setVerticalVelocity(0);
+                jellyfishOnPlatform = true;
+            }
+            
+        }
+
+        /**
+         * Ce bloc "if" vérifie si la méduse essaie de sauter à travers une plateforme solide. Pour ce faire, quatres
+         * conditions doivent évaluer à vrai:
+         * 
+         * - La plateforme est solide (SolidPlatform)
+         * 
+         * - La méduse intersecte la plateforme
+         * 
+         * - La tête de la méduse est entre le bas et le haut de la plateforme 
+         * 
+         * - La méduse a une vitesse vers le haut
+         */
+        if (intersects(other) && Math.abs(jellyfish.getY() - other.getY()) < 10 && jellyfish.getVerticalVelocity() < 0) {
+            if (other instanceof SolidPlatform) {
+                jellyfish.setVerticalVelocity(0);
+            }
         }
     }
 
+    /**
+     * Method that verifies whether or not the jellyfish intersects a platform
+     * @param other
+     * @return
+     */
     public boolean intersects(Platform other) {
         return !( // Un des carrés est à gauche de l’autre
         jellyfish.getX() + jellyfish.getWidth() < other.getX() || other.getX() + other.getWidth() < jellyfish.getX()
@@ -237,12 +310,20 @@ public class Game {
                 || other.getY() + other.getHeight() < jellyfish.getY());
     }
 
+    /**
+     * Method that places the jellyfish above a platform
+     * @param other
+     */
     public void pushOut(Platform other) {
         double deltaY = jellyfish.getY() + jellyfish.getHeight() - other.getY();
         jellyfish.setY(jellyfish.getY() - deltaY);
     }
 
-    public double getverticalSpaceBetweenPlatforms() {
+    /**
+     * Getters and setters below
+     */
+
+     public double getverticalSpaceBetweenPlatforms() {
         return verticalSpaceBetweenPlatforms;
     }
 
@@ -260,6 +341,10 @@ public class Game {
 
     public boolean hasGameStarted() {
         return gameStarted;
+    }
+
+    public long getScore() {
+        return score;
     }
 
     public void setGameStarted(boolean gameStarted) {

@@ -1,5 +1,4 @@
 package components;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class Bubble {
@@ -27,21 +26,5 @@ public class Bubble {
 
     public void update(double dt) {
         yPosition += dt * ySpeed;
-    }
-
-    public void draw(GraphicsContext context, double fenetreX, double fenetreY) {
-        /* 
-          Les coordonnées (x, y) sont les coordonnées dans le niveau
-          et ne sont *pas* utilisées pour dessiner directement le rectangle.
-        
-          On doit plutôt calculer les nouvelles coordonnées (xAffiche, yAffiche)
-          qui correspondent à des coordonnées dans le canvas affiché à l'écran,
-          en se basant sur l'endroit où la fenêtre du jeu est positionnée.
-         */
-        double xAffiche = xPosition - fenetreX;
-        double yAffiche = yPosition - fenetreY;
-
-        context.setFill(color);
-        context.fillRect(xAffiche, yAffiche, 30, 30);
     }
 }
