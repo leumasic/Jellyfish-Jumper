@@ -70,8 +70,9 @@ public class Game {
     }
 
     /**
-     * Vérifie si la méduse est en dessous de la fenêtre; auquel cas
-     * le jeu recommence
+     * Vérifie si la méduse est en dessous de la fenêtre; auquel cas le jeu
+     * recommence
+     * 
      * @param timeDelta
      */
     public void updateGame(double timeDelta) {
@@ -104,30 +105,13 @@ public class Game {
 
     public void updateJellyfish(double timeDelta) {
 
-        jellyfish.update(timeDelta, width);
+        jellyfishOnPlatform = false;
 
         for (Platform platform : platforms) {
-
-            if (jellyfish.getY() + jellyfish.getHeight() <= platform.getY() + platform.getHeight()
-                    && jellyfish.getY() + jellyfish.getHeight() >= platform.getY()
-                    && jellyfish.getX() >= platform.getX() && jellyfish.getX() <= platform.getX() + platform.getWidth()
-                    && jellyfish.getVerticalVelocity() <= 0) {
-                
-                System.out.println(jellyfish.getX() + ", " + platform.getX());
-                // System.out.println("Jelly on platform!");
-                jellyfishOnPlatform = true;
-                break;
-            } else {
-                jellyfishOnPlatform = false;
-            }
+            testCollision(platform);
         }
 
-        if (jellyfishOnPlatform) {
-            jellyfish.setVerticalAcceleration(0);
-            jellyfish.setVerticalVelocity(0);
-        } else {
-            jellyfish.setVerticalAcceleration(1200);
-        }
+        jellyfish.update(timeDelta, width);
     }
 
     public void updateWindow(double timeDelta) {
@@ -142,7 +126,6 @@ public class Game {
     public void jellyfishJump() {
         if (jellyfishOnPlatform) {
             jellyfish.jump();
-            jellyfishOnPlatform = false;
         }
     }
 
@@ -151,8 +134,8 @@ public class Game {
     }
 
     /**
-     * Méthode qui enlève N plateformes à la tête de
-     * l'attribut "platforms"
+     * Méthode qui enlève N plateformes à la tête de l'attribut "platforms"
+     * 
      * @param n
      */
     private void removeFirstPlatforms(int n) {
@@ -166,13 +149,15 @@ public class Game {
     }
 
     /**
-     * Méthode qui ajoute n plateformes à l'attribut "platforms" qui sont verticalement espacés de 
-     * la propriété verticalSpaceBetweenPlatforms, commençant à la position startY
+     * Méthode qui ajoute n plateformes à l'attribut "platforms" qui sont
+     * verticalement espacés de la propriété verticalSpaceBetweenPlatforms,
+     * commençant à la position startY
+     * 
      * @param n
      * @param startY
      */
     private void addNPlatforms(int n, double startY) {
-        
+
         // Une variable pour garder en mémoire le type de la dernière plateforme
         boolean lastAddedWasSolid = false;
 
@@ -185,12 +170,12 @@ public class Game {
             // Largeur de la plateforme aléatoire, entre 80 et 175
             double platformWidth = 80.0 + (95.0 * rand);
 
-            // Position X de la plateforme aléatoire mais dépendante de sa largeur 
+            // Position X de la plateforme aléatoire mais dépendante de sa largeur
             double platformX = rand * (width - platformWidth);
 
             // Position Y de la plateforme aléatoire, au dessus de la dernière plateforme
             double platformY = startY + (-i * verticalSpaceBetweenPlatforms);
-            
+
             if (!lastAddedWasSolid) {
                 // Type de plateforme déterminée aléatoirement (selon les consignes)
                 if (rand < 0.65) {
@@ -215,6 +200,42 @@ public class Game {
         }
     }
 
+    public void testCollision(Platform other) {
+        /**
+         * La collision avec une plateforme a lieu seulement si :
+         *
+         * - Il y a une intersection entre la plateforme et le personnage
+         *
+         * - La collision a lieu entre la plateforme et le *bas du personnage*
+         * seulement
+         *
+         * - La vitesse va vers le bas (le personnage est en train de tomber,
+         * pas en train de sauter)
+         */
+        if (intersects(other) && Math.abs(jellyfish.getY() + jellyfish.getHeight() - other.getY()) < 10
+                && jellyfish.getVerticalVelocity() > 0) {
+            System.out.println("Jellyfish on platform");
+            pushOut(other);
+            jellyfish.setVerticalVelocity(0);
+            jellyfishOnPlatform = true;
+        }
+    }
+
+    public boolean intersects(Platform other) {
+        return !( // Un des carrés est à gauche de l’autre
+                jellyfish.getX() + jellyfish.getWidth() < other.getX()
+                || other.getX() + other.getWidth() < jellyfish.getX()
+                // Un des carrés est en haut de l’autre
+                || jellyfish.getY() + jellyfish.getHeight() < other.getY()
+                || other.getY() + other.getHeight() < jellyfish.getY());
+    }
+
+    public void pushOut(Platform other) {
+        double deltaY = jellyfish.getY() + jellyfish.getHeight() - other.getY();
+        jellyfish.setY(jellyfish.getY() - deltaY);
+    }
+
+
     public double getverticalSpaceBetweenPlatforms() {
         return verticalSpaceBetweenPlatforms;
     }
@@ -222,6 +243,7 @@ public class Game {
     public int getNumPlatforms() {
         return numPlatforms;
     }
+
     public int getNumPlatformsToUpdate() {
         return numPlatformsToUpdate;
     }

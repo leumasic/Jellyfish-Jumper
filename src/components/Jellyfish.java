@@ -15,7 +15,7 @@ public class Jellyfish extends Entity {
         orientation = Orientation.LEFT;
 
         xAcceleration = 0.0;
-        yAcceleration = 0.0;
+        yAcceleration = 1200;
 
         xSpeed = 0.0;
         ySpeed = 0.0;
@@ -34,12 +34,13 @@ public class Jellyfish extends Entity {
         xPosition += xSpeed * timeDelta;
         yPosition += ySpeed * timeDelta;
 
-        if (xPosition + getWidth() / 2 > bound || xPosition - getWidth() / 2 < 0) {
-            xSpeed *= -0.9;
+        // Force à rester dans les bornes de l'écran
+        if (xPosition + width > bound || xPosition < 0) {
+            xSpeed *= -1;
         }
 
-        xPosition = Math.min(xPosition, bound - getWidth() / 2);
-        xPosition = Math.max(xPosition, getWidth() / 2);
+        xPosition = Math.min(xPosition, bound - width);
+        xPosition = Math.max(xPosition, 0);
     }
 
     public void jump() {
