@@ -8,3 +8,9 @@ For everything to work:
 JavaFX Library Link: https://gluonhq.com/products/javafx/
 
 If using another editor, proceed with instructions given in demo video on Studium.
+
+Todo:
+- Change behavior of different platforms
+- Show score
+- Debug mode
+- Bubbles
