@@ -15,6 +15,8 @@ public class Game {
     private ArrayList<Bubble> bubbles;
     private LinkedList<Platform> platforms;
 
+    private boolean gameStarted;
+
     private double width, height;
     private long score;
     private boolean jellyfishOnPlatform;
@@ -41,6 +43,9 @@ public class Game {
         this.platforms = new LinkedList<Platform>();
         this.platforms.add(new SimplePlatform(0, height, width, 10));
         addNPlatforms(numPlatforms, height - verticalSpaceBetweenPlatforms);
+
+        // Set the status of the game
+        this.gameStarted = false;
     }
 
     public void startWindow() {
@@ -60,13 +65,24 @@ public class Game {
         this.jellyfish.setVerticalAcceleration(0);
         this.jellyfish.setVerticalVelocity(0);
 
+        // Stop the window from moving
+        this.stopWindow();
+
+        // Set the window's position
+        this.window.setY(0);
+
         // Set the jellyfish to initial position
         this.jellyfish.setX(width / 2);
         this.jellyfish.setY(height - 50);
         this.jellyfishOnPlatform = true;
 
-        // Set the window's position
-        this.window.setY(0);
+        // Renew the platforms
+        this.platforms = new LinkedList<Platform>();
+        this.platforms.add(new SimplePlatform(0, height, width, 10));
+        addNPlatforms(numPlatforms, height - verticalSpaceBetweenPlatforms);
+
+        // Set the status of the game
+        this.gameStarted = false;
     }
 
     /**
@@ -79,7 +95,6 @@ public class Game {
         // If jellyfish is below the windows's vertical position, then game over
         if (jellyfish.getY() - window.getY() > height) {
             restartGame();
-            System.out.println("Game restarted!");
         }
     }
 
@@ -91,15 +106,10 @@ public class Game {
      * Méthode qui enlève les plateformes en-dessous de la fenêtre
      */
     public void updatePlatforms() {
-        Iterator<Platform> platformIterator = platforms.iterator();
-
-        while (platformIterator.hasNext()) {
-            if (platformIterator.next().getY() - height > window.getY()) {
-                platforms.poll();
-                addNPlatforms(1, platforms.peekLast().getY());
-            } else {
-                break;
-            }
+        // Update the platforms after numPlatformsToVerify of them are below the window
+        if (platforms.peek().getY() - (window.getY() + height) > verticalSpaceBetweenPlatforms * numPlatformsToUpdate) {
+            removeFirstPlatforms(numPlatformsToUpdate);
+            addNPlatforms(numPlatformsToUpdate, platforms.peekLast().getY() - verticalSpaceBetweenPlatforms);
         }
     }
 
@@ -112,6 +122,7 @@ public class Game {
         }
 
         jellyfish.update(timeDelta, width);
+        System.out.println(jellyfishOnPlatform);
     }
 
     public void updateWindow(double timeDelta) {
@@ -206,15 +217,13 @@ public class Game {
          *
          * - Il y a une intersection entre la plateforme et le personnage
          *
-         * - La collision a lieu entre la plateforme et le *bas du personnage*
-         * seulement
+         * - La collision a lieu entre la plateforme et le *bas du personnage* seulement
          *
-         * - La vitesse va vers le bas (le personnage est en train de tomber,
-         * pas en train de sauter)
+         * - La vitesse va vers le bas (le personnage est en train de tomber, pas en
+         * train de sauter)
          */
         if (intersects(other) && Math.abs(jellyfish.getY() + jellyfish.getHeight() - other.getY()) < 10
                 && jellyfish.getVerticalVelocity() > 0) {
-            System.out.println("Jellyfish on platform");
             pushOut(other);
             jellyfish.setVerticalVelocity(0);
             jellyfishOnPlatform = true;
@@ -223,9 +232,8 @@ public class Game {
 
     public boolean intersects(Platform other) {
         return !( // Un des carrés est à gauche de l’autre
-                jellyfish.getX() + jellyfish.getWidth() < other.getX()
-                || other.getX() + other.getWidth() < jellyfish.getX()
-                // Un des carrés est en haut de l’autre
+        jellyfish.getX() + jellyfish.getWidth() < other.getX() || other.getX() + other.getWidth() < jellyfish.getX()
+        // Un des carrés est en haut de l’autre
                 || jellyfish.getY() + jellyfish.getHeight() < other.getY()
                 || other.getY() + other.getHeight() < jellyfish.getY());
     }
@@ -234,7 +242,6 @@ public class Game {
         double deltaY = jellyfish.getY() + jellyfish.getHeight() - other.getY();
         jellyfish.setY(jellyfish.getY() - deltaY);
     }
-
 
     public double getverticalSpaceBetweenPlatforms() {
         return verticalSpaceBetweenPlatforms;
@@ -252,4 +259,11 @@ public class Game {
         return platforms;
     }
 
+    public boolean hasGameStarted() {
+        return gameStarted;
+    }
+
+    public void setGameStarted(boolean gameStarted) {
+        this.gameStarted = gameStarted;
+    }
 }

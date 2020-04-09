@@ -60,11 +60,7 @@ public class Controller {
         animateGame();
 
         // Start animating the window
-        // animateWindow();
-    }
-
-    public void startGame() {
-        this.game.startWindow();
+        animateWindow();
     }
 
     private void animateJellyfish() {
@@ -115,15 +111,15 @@ public class Controller {
                 // Update the platforms
                 game.updatePlatforms();
 
-                // Remove (undraw) the platforms below the first one
-                Platform lastPlatform = game.getPlatforms().peek();
-                view.removeRectangle(lastPlatform.getX(), lastPlatform.getY() + lastPlatform.getHeight(),
-                        view.getWidth(), Math.abs(lastPlatform.getY()));
+                // Remove (undraw) the platforms
+                Platform lastPlatform = game.getPlatforms().peekLast();
+                view.removeRectangle(0, game.window.getY(),
+                        view.getWidth(), Math.abs(game.window.getY()) + 480);
 
                 // Draw every other platform
                 for (Platform platform : game.getPlatforms()) {
-                    view.drawRectangle(platform.getX(), platform.getY(), platform.getWidth(), platform.getHeight(),
-                            platform.getColor());
+                    view.drawRectangle(platform.getX() - game.window.getX(), platform.getY() - game.window.getY(),
+                            platform.getWidth(), platform.getHeight(), platform.getColor());
                 }
             }
         };
@@ -174,11 +170,11 @@ public class Controller {
         windowTimer.start();
     }
 
-    public void resumeGame() {
-        animateWindow();
-    }
-
     public void handleKeyLeft() {
+        if (!game.hasGameStarted()) {
+            game.startWindow();
+            game.setGameStarted(true);
+        }
 
         if (game.jellyfish.getOrientation() != Orientation.LEFT)
             game.jellyfish.setOrientation(Orientation.LEFT);
@@ -187,6 +183,10 @@ public class Controller {
     }
 
     public void handleKeyRight() {
+        if (!game.hasGameStarted()) {
+            game.startWindow();
+            game.setGameStarted(true);
+        }
 
         if (game.jellyfish.getOrientation() != Orientation.RIGHT)
             game.jellyfish.setOrientation(Orientation.RIGHT);
@@ -195,6 +195,10 @@ public class Controller {
     }
 
     public void handleKeyUp() {
+        if (!game.hasGameStarted()) {
+            game.startWindow();
+            game.setGameStarted(true);
+        }
 
         game.jellyfishJump();
     }
@@ -209,7 +213,7 @@ public class Controller {
             // ")", 5, 30);
             game.stopWindow();
         } else {
-            animateWindow();
+            game.startWindow();
         }
     }
 
