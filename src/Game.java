@@ -62,7 +62,6 @@ public class Game {
         // Make the jellyfish immobile
         this.jellyfish.setHorizontalAcceleration(0);
         this.jellyfish.setHorizontalVelocity(0);
-        this.jellyfish.setVerticalAcceleration(0);
         this.jellyfish.setVerticalVelocity(0);
 
         // Stop the window from moving
