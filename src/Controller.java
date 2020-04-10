@@ -1,3 +1,6 @@
+import java.util.LinkedList;
+
+import components.Bubble;
 import components.Platform;
 import components.Jellyfish.Orientation;
 import javafx.animation.AnimationTimer;
@@ -11,6 +14,7 @@ public class Controller {
     // Allows the controller to modify the view internally
     private View view;
     private Game game;
+    private LinkedList<Bubble> bubbles;
     private boolean inDebugMode;
 
     public Controller(View view) {
@@ -64,6 +68,29 @@ public class Controller {
 
         // Start animating the score
         animateScore();
+
+        // Start animating the decorations
+        animateDecorations();
+    }
+
+    /**
+     * Method that animates the decorations (e.g. Bubbles)
+     */
+    private void animateDecorations() {
+        AnimationTimer timer = new AnimationTimer() {
+            private long startTime = 0;
+
+            @Override
+            public void handle(long now) {
+                if (startTime == 0) {
+                    startTime = now;
+                    return;
+                }
+
+
+            }
+        };
+        timer.start();
     }
 
     /**

@@ -15,7 +15,6 @@ public class Game {
 
     protected Window window;
     protected Jellyfish jellyfish;
-    private ArrayList<Bubble> bubbles;
     private LinkedList<Platform> platforms;
 
     private boolean gameStarted;
@@ -23,8 +22,6 @@ public class Game {
     private double width, height;
     private long score;
     private boolean jellyfishOnPlatform;
-
-    private double windowSpeed;
 
     public Game(double width, double height) {
 
@@ -158,13 +155,12 @@ public class Game {
      */
     public void updateWindow(double timeDelta) {
 
+        // If the jellyfish is above 75% of the window, then move the window up by a bit
         if (jellyfish.getY() < window.getY() + height / 4) {
-
-            System.out.println("Jellyfish above 3/4 of the window");
-        } else {
-            windowSpeed = window.getVerticalVelocity();
+            window.setY(window.getY() - 2);
         }
 
+        // Update the window's position
         window.update(timeDelta);
     }
 
