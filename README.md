@@ -17,6 +17,7 @@ To test the app using VSCode (For IntelliJ, see guides on studium from teacher)
 1. Make sure you've downloaded all JAVA necessary extensions in vs code.
 
 ![Imgur Image](https://i.imgur.com/X1LLTM4.png)
+
 2. Open View.Java, or any of the files in /.vscode/settings.json
 3. F5
 4. Escape to close the app, or click on the red square on the topside of VsCode
