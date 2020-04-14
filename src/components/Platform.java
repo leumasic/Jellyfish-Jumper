@@ -19,4 +19,5 @@ public abstract class Platform extends Entity {
     public double getWidth() {return width;}
     public double getHeight() {return height;}
     public Color getColor() {return color;}
+    
 }

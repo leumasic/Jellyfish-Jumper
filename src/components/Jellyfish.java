@@ -43,6 +43,16 @@ public class Jellyfish extends Entity {
         xPosition = Math.max(xPosition, 0);
     }
 
+    public int getxPosition() { return (int) xPosition; }
+    public int getyPosition() { return (int) yPosition; }
+
+    public int getxSpeed(){ return (int) xSpeed; }
+    public int getySpeed(){ return (int) ySpeed; }
+
+    public int getxAcceleration(){ return (int) xAcceleration; }
+    public int getyAcceleration(){ return (int) yAcceleration; }
+
+
     public void jump() {
         ySpeed += -600.0;
     }
