@@ -14,8 +14,8 @@ public class Controller {
     // Allows the controller to modify the view internally
     private View view;
     private Game game;
-    private LinkedList<Bubble> bubbles;
     private boolean inDebugMode;
+
 
     public Controller(View view) {
         // Set view to modify
@@ -51,6 +51,10 @@ public class Controller {
                         false),
                 new Image("/assets/jellyfish6.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false,
                         false) };
+
+    
+
+
 
         inDebugMode = false;
 
@@ -187,6 +191,77 @@ public class Controller {
     }
 
     /**
+     * Method that animates the platforms
+     */
+
+    private void animateBubbles() {
+
+
+      AnimationTimer timer = new AnimationTimer() {
+
+            @Override
+            public void handle(long now) {
+
+                private long startTime = 0;
+                private long lastTime = 0;
+
+
+                if (lastTime == 0) {
+                    lastTime = now;
+                    return;
+                }
+
+               if (startTime == 0) {
+                    startTime = now;
+                    return;
+                }
+
+
+              // Update the bubbles
+                game.updateBubbles(now- lastTime);
+
+
+              // Remove (undraw) the bubbles
+                view.clearOval(0, 0, view.getWidth(), view.getHeight());
+                
+
+                // Draw every bubble
+                 for (Bubble bubbleset : game.getBubbles()) {
+                    view.drawOval(bubbleset.getX() ,bubbleset.getY(),
+                    bubbleset.getWidth(), bubbleset.getHeight(), bubbleset.getColor());
+
+                    for( int i= 1; i < 3; i++ )  {
+                    view.drawOval(bubbleset.getX() + i*20 ,bubbleset.getY(),
+                    bubbleset.getWidth(), bubbleset.getHeight(), bubbleset.getColor());
+                    view.drawOval(bubbleset.getX() - i*20 ,bubbleset.getY(),
+                    bubbleset.getWidth(), bubbleset.getHeight(), bubbleset.getColor());
+
+                    }
+                }
+
+                int deltat= (int) (now -startTime) * 1e-9;
+                if ( (deltat % 3) == 0 ) {
+
+                    startTime= now;
+                    for (Bubble bubbleset : game.getBubbles()) {
+                    bubbleset.setR();
+                    bubbleset.setY();
+                    bubbleset.setX();
+
+                    }    	
+                } 
+
+                lastTime = now;
+              
+             }
+        };
+
+        timer.start();
+    }
+
+
+
+    /**
      * Method that animates the game
      */
     private void animateGame() {
@@ -235,6 +310,49 @@ public class Controller {
 
         windowTimer.start();
     }
+
+    
+    /**
+     * Method that animates the Debug text
+     */
+    private void animateDebug() {
+        AnimationTimer debugTimer = new AnimationTimer() {
+           
+
+            @Override
+            public void handle(long now) {
+
+
+                // Clear the debug info from the canvas
+                view.cleardebugText(0, 0, view.getWidth(), view.getHeight());
+                
+                view.drawdebugText( "Position = (   " + jellyfish.getxPosition() +  " , " +  jellyfish.getyPosition() + "   ) ", 5 , 15);
+                view.drawdebugText( "v = (   " + jellyfish.getxSpeed() +  "," +  jellyfish.getySpeed() + "   )", 5, 30);
+                view.drawdebugText( "a = (   " + jellyfish.getxAcceleration() +  "," + jellyfish.getyAcceleration() + "   )", 5, 45);
+                view.drawdebugText( "Touche le sol: " + game.getOnPlatform() , 5, 60);
+
+
+                 if (game.getjellyfishOnplatform()) {
+
+                     view.setYellow();
+
+                 }        
+                else {
+
+                     view.resetYellow();
+
+                 }        
+            
+            }
+        
+        };
+
+        debugTimer.start();
+    }
+
+
+
+
 
     /**
      * Event on left-key press
@@ -296,13 +414,17 @@ public class Controller {
         inDebugMode = !inDebugMode;
 
         if (inDebugMode) {
+
+    
             // context.setFill(Color.BLACK);
             // context.fillText("Utilisez les flèches pour déplacer la fenêtre", 5, 15);
             // context.fillText("Origine de la fenêtre: (" + fenetreX + ", " + fenetreY +
             // ")", 5, 30);
             game.stopWindow();
+            animateDebug();
         } else {
             game.startWindow();
+            debugTimer.stop();
         }
     }
 

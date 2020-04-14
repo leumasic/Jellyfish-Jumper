@@ -17,11 +17,15 @@ public class View extends Application {
     private double WIDTH = 350;
     private double HEIGHT = 480;
 
+    // Platform color
+    private Color reccolor;
+
     // Graphical Elements
     GraphicsContext imageContext;
     GraphicsContext rectanglesContext; 
+    GraphicsContext circlesContext; 
     GraphicsContext scoreContext; 
-    
+    GraphicsContext debugContext; 
     // Application Controller
     private Controller controller;
 
@@ -65,6 +69,14 @@ public class View extends Application {
         root.getChildren().add(rectanglesCanvas);
         rectanglesContext = rectanglesCanvas.getGraphicsContext2D();
 
+         /**
+         * A canvas intended for the circles to be drawn onto it
+         * Used to draw bubbles
+         */
+        Canvas circlesCanvas = new Canvas(WIDTH, HEIGHT);
+        root.getChildren().add(circlesCanvas);
+        circlesContext = circlesCanvas.getGraphicsContext2D();
+
         /**
          * A canvas intended for text to be drawn onto it
          * Used to draw the score
@@ -76,6 +88,20 @@ public class View extends Application {
         // Center the text
         scoreContext.setTextAlign(TextAlignment.CENTER);
         scoreContext.setTextBaseline(VPos.CENTER);
+
+        /**
+         * A canvas intended for text to be drawn onto it
+         * Used to draw the debug info
+         */
+        Canvas debugCanvas = new Canvas(WIDTH, HEIGHT);
+        root.getChildren().add(debugCanvas);
+        scoreContext = debugCanvas.getGraphicsContext2D();
+        
+        // Center the text
+        debugCanvas.setTextAlign(TextAlignment.LEFT);
+        debugCanvas.setTextBaseline(VPos.LEFT);
+
+
 
         // Events triggered whenever the keys in the switch block are pressed
         scene.setOnKeyPressed((e) -> {
@@ -139,8 +165,30 @@ public class View extends Application {
      * @param color
      */
     public void drawRectangle(double xPosition, double yPosition, double width, double height, Color color) {
-        rectanglesContext.setFill(color);
+        if ( reccolor != Color.YELLOW ) {this.recolor= color;}
+        rectanglesContext.setFill(reccolor);
         rectanglesContext.fillRect(xPosition, yPosition, width, height);        
+    }
+
+    public void setYellow() {
+        this.reccolor= Color.YELLOW;
+    }
+
+    public void resetYellow() {
+        this.reccolor= null;
+    }
+
+       /**
+     * Draws a circle onto the circlesContext canvas
+     * @param xPosition
+     * @param yPosition
+     * @param width
+     * @param height
+     * @param color
+     */
+    public void drawOval(double xPosition, double yPosition, double width, double height, Color color) {
+        circlesContext.setFill(color);
+        circlesContext.fillOval(xPosition, yPosition, width, height);        
     }
 
     /**
@@ -155,6 +203,21 @@ public class View extends Application {
         scoreContext.fillText(text, xPosition, yPosition);
     }
 
+
+    
+    /**
+     * Draws text onto the debugContext canvas
+     * @param text
+     * @param xPosition
+     * @param yPosition
+     */
+    public void drawdebugText(String text, double xPosition, double yPosition) {
+        debugContext.setFill(Color.WHITE);
+        debugContext.setFont(Font.font(14));
+        debugContext.fillText(text, xPosition, yPosition);
+    }
+
+
     /**
      * Removes a rectangular area from the scoreContext canvas 
      * @param xPosition
@@ -165,6 +228,30 @@ public class View extends Application {
     public void clearText(double xPosition, double yPosition, double width, double height) {
         scoreContext.clearRect(xPosition, yPosition, width, height);
     }
+     /**
+     * Removes circles from the circlesContext canvas
+     * @param xPosition
+     * @param yPosition
+     * @param width
+     * @param height
+     */
+    public void clearOval(double xPosition, double yPosition, double width, double height) {
+        circlesContext.clearOval(xPosition, yPosition, width, height);
+    }
+
+    
+    /**
+     * Removes a rectangular area from the scoreContext canvas 
+     * @param xPosition
+     * @param yPosition
+     * @param width
+     * @param height
+     */
+    public void cleardebugText(double xPosition, double yPosition, double width, double height) {
+        debugContext.clearRect(xPosition, yPosition, width, height);
+    }
+
+
 
     /**
      * Removes a rectangular area from the rectanglesContext canvas 
@@ -176,6 +263,9 @@ public class View extends Application {
     public void clearRectangle(double xPosition, double yPosition, double width, double height) {
         rectanglesContext.clearRect(xPosition, yPosition, width, height);
     }
+
+
+
 
     // Getters and setters for the height and the width of the game
     public double getWidth() {return WIDTH;}

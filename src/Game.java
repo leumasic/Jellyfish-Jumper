@@ -16,12 +16,14 @@ public class Game {
     protected Window window;
     protected Jellyfish jellyfish;
     private LinkedList<Platform> platforms;
+    private LinkedList<Bubble> bubbles;
 
     private boolean gameStarted;
 
     private double width, height;
     private long score;
     private boolean jellyfishOnPlatform;
+    private String OnPlatform;
 
     public Game(double width, double height) {
 
@@ -47,6 +49,12 @@ public class Game {
         this.platforms.add(new SimplePlatform(0, height, width, 10));
         addNPlatforms(numPlatforms, height - verticalSpaceBetweenPlatforms);
 
+        // Instantiate three bubbles for three sets of bubbles
+        this.bubbles= new LinkedList<Bubble>();
+        this.bubbles.add(new Bubble(width,heigth));
+        this.bubbles.add(new Bubble(width,heigth));
+        this.bubbles.add(new Bubble(width,heigth));
+        
         // Set the status of the game
         this.gameStarted = false;
     }
@@ -92,7 +100,13 @@ public class Game {
         // Renew the platforms
         this.platforms = new LinkedList<Platform>();
         this.platforms.add(new SimplePlatform(0, height, width, 10));
-        addNPlatforms(numPlatforms, height - verticalSpaceBetweenPlatforms);
+        
+        
+        // Renew the three set of bubbles
+        this.bubbles= new LinkedList<Bubble>();
+        this.bubbles.add(new Bubble(width,heigth));
+        this.bubbles.add(new Bubble(width,heigth));
+        this.bubbles.add(new Bubble(width,heigth));
 
         // Set the status of the game
         this.gameStarted = false;
@@ -140,6 +154,7 @@ public class Game {
     public void updateJellyfish(double timeDelta) {
 
         jellyfishOnPlatform = false;
+        OnPlatform= "non";
 
         for (Platform platform : platforms) {
             testCollision(platform);
@@ -169,7 +184,7 @@ public class Game {
      * @param timeDelta
      */
     public void updateBubbles(double timeDelta) {
-        // Show bubbles if % 5 seconds
+        bubbles.update(timeDelta);
 
     }
 
@@ -275,12 +290,15 @@ public class Game {
                 pushOut(other);
                 jellyfish.setVerticalVelocity(0);
                 jellyfishOnPlatform = true;
+                OnPlatform = "oui";
+
             } else if (other instanceof BouncyPlatform) {
                 jellyfish.setVerticalVelocity(Math.min(-100,jellyfish.getVerticalVelocity() * - 1.5));
             } else {
                 pushOut(other);
                 jellyfish.setVerticalVelocity(0);
                 jellyfishOnPlatform = true;
+                OnPlatform = "oui";
             }
             
         }
@@ -346,6 +364,11 @@ public class Game {
         return platforms;
     }
 
+    public LinkedList<Platform> getBubbles() {
+
+        return bubbles;
+    }
+
     public boolean hasGameStarted() {
         return gameStarted;
     }
@@ -357,4 +380,16 @@ public class Game {
     public void setGameStarted(boolean gameStarted) {
         this.gameStarted = gameStarted;
     }
+
+    public String getOnplatform(){
+        return OnPlatform;
+    }
+
+    public Boolean getjellyfishOnplatform(){
+        return jellyfishOnPlatform ;
+    }
+
+
+
+
 }
