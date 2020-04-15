@@ -165,7 +165,7 @@ public class View extends Application {
      * @param color
      */
     public void drawRectangle(double xPosition, double yPosition, double width, double height, Color color) {
-        if ( reccolor != Color.YELLOW ) {this.recolor= color;}
+        if ( reccolor != Color.YELLOW ) {this.reccolor= color;}
         rectanglesContext.setFill(reccolor);
         rectanglesContext.fillRect(xPosition, yPosition, width, height);        
     }
@@ -211,7 +211,7 @@ public class View extends Application {
      * @param xPosition
      * @param yPosition
      */
-    public void drawdebugText(String text, double xPosition, double yPosition) {
+    public void drawDebugText(String text, double xPosition, double yPosition) {
         debugContext.setFill(Color.WHITE);
         debugContext.setFont(Font.font(14));
         debugContext.fillText(text, xPosition, yPosition);
@@ -247,7 +247,7 @@ public class View extends Application {
      * @param width
      * @param height
      */
-    public void cleardebugText(double xPosition, double yPosition, double width, double height) {
+    public void clearDebugText(double xPosition, double yPosition, double width, double height) {
         debugContext.clearRect(xPosition, yPosition, width, height);
     }
 

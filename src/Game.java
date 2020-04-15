@@ -23,7 +23,7 @@ public class Game {
     private double width, height;
     private long score;
     private boolean jellyfishOnPlatform;
-    private String OnPlatform;
+    
 
     public Game(double width, double height) {
 
@@ -51,9 +51,8 @@ public class Game {
 
         // Instantiate three bubbles for three sets of bubbles
         this.bubbles= new LinkedList<Bubble>();
-        this.bubbles.add(new Bubble(width,heigth));
-        this.bubbles.add(new Bubble(width,heigth));
-        this.bubbles.add(new Bubble(width,heigth));
+        addBubbles(3);
+        
         
         // Set the status of the game
         this.gameStarted = false;
@@ -104,9 +103,7 @@ public class Game {
         
         // Renew the three set of bubbles
         this.bubbles= new LinkedList<Bubble>();
-        this.bubbles.add(new Bubble(width,heigth));
-        this.bubbles.add(new Bubble(width,heigth));
-        this.bubbles.add(new Bubble(width,heigth));
+        addBubbles(3);
 
         // Set the status of the game
         this.gameStarted = false;
@@ -154,7 +151,7 @@ public class Game {
     public void updateJellyfish(double timeDelta) {
 
         jellyfishOnPlatform = false;
-        OnPlatform= "non";
+        
 
         for (Platform platform : platforms) {
             testCollision(platform);
@@ -290,7 +287,7 @@ public class Game {
                 pushOut(other);
                 jellyfish.setVerticalVelocity(0);
                 jellyfishOnPlatform = true;
-                OnPlatform = "oui";
+                
 
             } else if (other instanceof BouncyPlatform) {
                 jellyfish.setVerticalVelocity(Math.min(-100,jellyfish.getVerticalVelocity() * - 1.5));
@@ -298,7 +295,7 @@ public class Game {
                 pushOut(other);
                 jellyfish.setVerticalVelocity(0);
                 jellyfishOnPlatform = true;
-                OnPlatform = "oui";
+                
             }
             
         }
@@ -369,6 +366,15 @@ public class Game {
         return bubbles;
     }
 
+    public void addBubbles(int l) {
+
+        for(int i=0; i < l; i++)  {
+           this.bubbles.add(new Bubble(width,heigth));
+        }
+
+    }
+
+
     public boolean hasGameStarted() {
         return gameStarted;
     }
@@ -381,9 +387,6 @@ public class Game {
         this.gameStarted = gameStarted;
     }
 
-    public String getOnplatform(){
-        return OnPlatform;
-    }
 
     public Boolean getjellyfishOnplatform(){
         return jellyfishOnPlatform ;

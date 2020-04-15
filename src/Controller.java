@@ -73,6 +73,9 @@ public class Controller {
         // Start animating the score
         animateScore();
 
+        // Start animating the debug text
+        animateDebug();
+
         // Start animating the decorations
         animateDecorations();
     }
@@ -324,32 +327,33 @@ public class Controller {
 
 
                 // Clear the debug info from the canvas
-                view.cleardebugText(0, 0, view.getWidth(), view.getHeight());
+                view.clearDebugText(0, 0, view.getWidth(), view.getHeight());
                 
-                view.drawdebugText( "Position = (   " + jellyfish.getxPosition() +  " , " +  jellyfish.getyPosition() + "   ) ", 5 , 15);
-                view.drawdebugText( "v = (   " + jellyfish.getxSpeed() +  "," +  jellyfish.getySpeed() + "   )", 5, 30);
-                view.drawdebugText( "a = (   " + jellyfish.getxAcceleration() +  "," + jellyfish.getyAcceleration() + "   )", 5, 45);
-                view.drawdebugText( "Touche le sol: " + game.getOnPlatform() , 5, 60);
+                view.drawDebugText( "Position = (   " + jellyfish.getxPosition() +  " , " +  jellyfish.getyPosition() + "   ) ", 5 , 15);
+                view.drawDebugText( "v = (   " + jellyfish.getxSpeed() +  "," +  jellyfish.getySpeed() + "   )", 5, 30);
+                view.drawDebugText( "a = (   " + jellyfish.getxAcceleration() +  "," + jellyfish.getyAcceleration() + "   )", 5, 45);
 
 
                  if (game.getjellyfishOnplatform()) {
+
+                     view.drawDebugText( "Touche le sol: " + oui , 5, 60);
 
                      view.setYellow();
 
                  }        
                 else {
 
-                     view.resetYellow();
+                    view.drawDebugText( "Touche le sol: " + non , 5, 60);
 
-                 }        
-            
+                    view.resetYellow();
+
+                 }                  
             }
         
         };
 
-        debugTimer.start();
+       
     }
-
 
 
 
@@ -421,10 +425,10 @@ public class Controller {
             // context.fillText("Origine de la fenêtre: (" + fenetreX + ", " + fenetreY +
             // ")", 5, 30);
             game.stopWindow();
-            animateDebug();
+            debugTimer.start();
         } else {
             game.startWindow();
-            debugTimer.stop();
+            debugTimer.stop(); // stop timer initiated by animateDebug()
         }
     }
 
