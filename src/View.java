@@ -95,11 +95,11 @@ public class View extends Application {
          */
         Canvas debugCanvas = new Canvas(WIDTH, HEIGHT);
         root.getChildren().add(debugCanvas);
-        scoreContext = debugCanvas.getGraphicsContext2D();
+        debugContext = debugCanvas.getGraphicsContext2D();
         
         // Center the text
-        debugCanvas.setTextAlign(TextAlignment.LEFT);
-        debugCanvas.setTextBaseline(VPos.LEFT);
+        debugContext.setTextAlign(TextAlignment.LEFT);
+        debugContext.setTextBaseline(VPos.TOP);
 
 
 
@@ -235,8 +235,8 @@ public class View extends Application {
      * @param width
      * @param height
      */
-    public void clearOval(double xPosition, double yPosition, double width, double height) {
-        circlesContext.clearOval(xPosition, yPosition, width, height);
+    public void clearCircle(double xPosition, double yPosition, double width, double height) {
+        circlesContext.clearRect(xPosition, yPosition, width, height);
     }
 
     

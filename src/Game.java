@@ -180,8 +180,8 @@ public class Game {
      * TODO -> Updates the bubbles
      * @param timeDelta
      */
-    public void updateBubbles(double timeDelta) {
-        bubbles.update(timeDelta);
+    public void updateBubbles(Bubble bubbleset,double timeDelta) {
+        bubbleset.update(timeDelta);
 
     }
 
@@ -361,7 +361,7 @@ public class Game {
         return platforms;
     }
 
-    public LinkedList<Platform> getBubbles() {
+    public LinkedList<Bubble> getBubbles() {
 
         return bubbles;
     }
@@ -369,7 +369,7 @@ public class Game {
     public void addBubbles(int l) {
 
         for(int i=0; i < l; i++)  {
-           this.bubbles.add(new Bubble(width,heigth));
+           this.bubbles.add(new Bubble(width,height));
         }
 
     }
@@ -388,7 +388,7 @@ public class Game {
     }
 
 
-    public Boolean getjellyfishOnplatform(){
+    public boolean getjellyfishOnplatform(){
         return jellyfishOnPlatform ;
     }
 

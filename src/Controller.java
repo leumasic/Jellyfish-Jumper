@@ -1,5 +1,6 @@
 import java.util.LinkedList;
 
+
 import components.Bubble;
 import components.Platform;
 import components.Jellyfish.Orientation;
@@ -15,9 +16,16 @@ public class Controller {
     private View view;
     private Game game;
     private boolean inDebugMode;
+    private AnimationTimer debugTimer;
+
+
 
 
     public Controller(View view) {
+
+
+
+
         // Set view to modify
         this.view = view;
 
@@ -52,11 +60,10 @@ public class Controller {
                 new Image("/assets/jellyfish6.png", game.jellyfish.getWidth(), game.jellyfish.getHeight(), false,
                         false) };
 
-    
-
-
 
         inDebugMode = false;
+
+
 
         // Start animating the jellyfish
         animateJellyfish();
@@ -221,11 +228,13 @@ public class Controller {
 
 
               // Update the bubbles
-                game.updateBubbles(now- lastTime);
+                for (Bubble bubbleset : game.getBubbles())  game.updateBubbles(bubbleset, now - lastTime);
+
+
 
 
               // Remove (undraw) the bubbles
-                view.clearOval(0, 0, view.getWidth(), view.getHeight());
+                view.clearCircle(0, 0, view.getWidth(), view.getHeight());
                 
 
                 // Draw every bubble
@@ -242,8 +251,8 @@ public class Controller {
                     }
                 }
 
-                int deltat= (int) (now -startTime) * 1e-9;
-                if ( (deltat % 3) == 0 ) {
+
+                if ( ( (int) ( (now -startTime) * 1e-9 ) ) % 3 ) == 0 ) {
 
                     startTime= now;
                     for (Bubble bubbleset : game.getBubbles()) {
@@ -251,8 +260,8 @@ public class Controller {
                     bubbleset.setY();
                     bubbleset.setX();
 
-                    }    	
-                } 
+                    }
+                }
 
                 lastTime = now;
               
@@ -329,21 +338,21 @@ public class Controller {
                 // Clear the debug info from the canvas
                 view.clearDebugText(0, 0, view.getWidth(), view.getHeight());
                 
-                view.drawDebugText( "Position = (   " + jellyfish.getxPosition() +  " , " +  jellyfish.getyPosition() + "   ) ", 5 , 15);
-                view.drawDebugText( "v = (   " + jellyfish.getxSpeed() +  "," +  jellyfish.getySpeed() + "   )", 5, 30);
-                view.drawDebugText( "a = (   " + jellyfish.getxAcceleration() +  "," + jellyfish.getyAcceleration() + "   )", 5, 45);
+                view.drawDebugText( "Position = (   " + game.jellyfish.getxPosition() +  " , " +  game.jellyfish.getyPosition() + "   ) ", 5 , 15);
+                view.drawDebugText( "v = (   " + game.jellyfish.getxSpeed() +  "," +  game.jellyfish.getySpeed() + "   )", 5, 30);
+                view.drawDebugText( "a = (   " + game.jellyfish.getxAcceleration() +  "," + game.jellyfish.getyAcceleration() + "   )", 5, 45);
 
 
                  if (game.getjellyfishOnplatform()) {
 
-                     view.drawDebugText( "Touche le sol: " + oui , 5, 60);
+                     view.drawDebugText( "Touche le sol: " + "oui " , 5, 60);
 
                      view.setYellow();
 
                  }        
                 else {
 
-                    view.drawDebugText( "Touche le sol: " + non , 5, 60);
+                    view.drawDebugText( "Touche le sol: " +  "non" , 5, 60);
 
                     view.resetYellow();
 
