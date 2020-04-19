@@ -9,17 +9,11 @@ public class Jellyfish extends Entity {
     private double width, height;
 
     public Jellyfish(double xPosition, double yPosition, double width, double height) {
-        super(xPosition, yPosition, 0, 0, 0, 0);
+        super(xPosition, yPosition, 0, 0, 0, 1200);
 
         // Default the jellyfish's orientation to LEFT
         orientation = Orientation.LEFT;
 
-        xAcceleration = 0.0;
-        yAcceleration = 1200;
-
-        xSpeed = 0.0;
-        ySpeed = 0.0;
-        
         this.width = width;
         this.height = height;
     }
@@ -38,20 +32,10 @@ public class Jellyfish extends Entity {
         if (xPosition + width > bound || xPosition < 0) {
             xSpeed *= -1;
         }
-
+        
         xPosition = Math.min(xPosition, bound - width);
         xPosition = Math.max(xPosition, 0);
     }
-
-    public int getxPosition() { return (int) xPosition; }
-    public int getyPosition() { return (int) yPosition; }
-
-    public int getxSpeed(){ return (int) xSpeed; }
-    public int getySpeed(){ return (int) ySpeed; }
-
-    public int getxAcceleration(){ return (int) xAcceleration; }
-    public int getyAcceleration(){ return (int) yAcceleration; }
-
 
     public void jump() {
         ySpeed += -600.0;
